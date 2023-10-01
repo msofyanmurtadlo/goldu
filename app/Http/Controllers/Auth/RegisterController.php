@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Models\Bank;
 use App\Models\User;
+use App\Models\Network;
+use App\Models\NetworkBallance;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use App\Providers\RouteServiceProvider;
@@ -79,7 +81,14 @@ class RegisterController extends Controller
         $bank = new Bank;
         $bank->user_id = $user->id;
         $bank->save();
-
+        $networks = Network::all();
+        foreach ($networks as $network) {
+            $networkBalance = new NetworkBallance;
+            $networkBalance->user_id = $user->id;
+            $networkBalance->network_id = $network->id;
+            $networkBalance->balance = 0;  // atau nilai awal lainnya
+            $networkBalance->save();
+        }
         return $user;
     }
 }

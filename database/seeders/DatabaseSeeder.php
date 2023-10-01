@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
 
         // Panggil seeder SettingSeeder
         $this->call(SettingSeeder::class);
-
-        // Panggil seeder lainnya jika ada
+        $this->call(CountriesSeeder::class);
+        $this->command->info('Seeded the countries!');
     }
 }

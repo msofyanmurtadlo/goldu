@@ -168,6 +168,11 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        Jenssegers\Agent\AgentServiceProvider::class,
+        Stevebauman\Location\LocationServiceProvider::class,
+        Webpatser\Countries\CountriesServiceProvider::class,
+
+
     ])->toArray(),
 
     /*
@@ -183,6 +188,9 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
+        'Agent' => Jenssegers\Agent\Facades\Agent::class,
+        'Location' => Stevebauman\Location\Facades\Location::class,
+        'Countries' => Webpatser\Countries\CountriesFacade::class,
     ])->toArray(),
 
 ];

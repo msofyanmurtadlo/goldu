@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Offer;
 use Illuminate\Http\Request;
 use App\Helpers\CountryHelper;
+use App\Models\Network;
 use Illuminate\Support\Facades\Validator;
 
 class OfferController extends Controller
@@ -15,15 +16,17 @@ class OfferController extends Controller
 
     public function index()
     {
-        $countryOptions = CountryHelper::getCountryOptions();
-        $search = request('search');
-        $offers = Offer::when($search, function ($query, $search) {
-            return $query->where('country', 'like', "%{$search}%");
-        })->with('user')
-            ->orderBy('created_at', 'desc')  // Urutkan berdasarkan kolom created_at secara descending
-            ->paginate(10);
 
-        return view('offers.index', compact('offers', 'countryOptions'));
+        $search = request('search');
+        $offers = Offer::with('user', 'network')
+            ->whereHas('network', function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%");
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+        $network = Network::get();
+        $countryOptions = CountryHelper::getCountryOptions();
+        return view('offers.index', compact('offers', 'countryOptions', 'network'));
     }
 
     /**
@@ -41,6 +44,7 @@ class OfferController extends Controller
     {
         $user = $request->user();
         $validator = Validator::make($request->all(), [
+            'network_id' => 'required|max:255',
             'country' => ['required', 'string', 'max:255'],
             'url_mobile' => 'required|url|max:255',
             'url_desktop' => 'required|url|max:255',
@@ -51,6 +55,7 @@ class OfferController extends Controller
         }
 
         Offer::create([
+            'network_id' => $request->input('network_id'),
             'country' => $request->input('country'),
             'url_mobile' => $request->input('url_mobile'),
             'url_desktop' => $request->input('url_desktop'),
@@ -82,6 +87,7 @@ class OfferController extends Controller
     {
         // Validasi input
         $validator = Validator::make($request->all(), [
+            'network_id' => 'required|max:255',
             'country' => ['required', 'string', 'max:255'],
             'url_mobile' => 'required|url|max:255',
             'url_desktop' => 'required|url|max:255',
@@ -93,6 +99,7 @@ class OfferController extends Controller
 
         // Update data pengguna
         $offer->update([
+            'network_id' => $request->network_id,
             'country' => $request->country,
             'url_mobile' => $request->url_mobile,
             'url_desktop' => $request->url_desktop,

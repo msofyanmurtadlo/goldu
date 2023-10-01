@@ -19,7 +19,7 @@ class SettingSeeder extends Seeder
         ]);
         DB::table('settings')->insert([
             'key' => 'Site_Description',
-            'value' => 'Boost affiliate marketing success with our private affiliate network. Create customized links, access comprehensive reports, and maximize earnings. Join us today!',
+            'value' => 'Increase affiliate marketing success with our private affiliate network. Create smart links, access comprehensive reports, and maximize earnings.',
         ]);
         DB::table('settings')->insert([
             'key' => 'Default_Fee',
@@ -37,9 +37,10 @@ class SettingSeeder extends Seeder
             'key' => 'Default_Promotion',
             'value' => 'https://www.youtube.com/@gulalidesa',
         ]);
+
         DB::table('settings')->insert([
-            'key' => 'Default_Offer',
-            'value' => 'https://jhcbbi.hornylocls.com/s/607fbb1ac7fe5',
+            'key' => 'Postback_Key',
+            'value' => '$2a$12$3FMmdurPIjC7WcDEZwcuIu.UnaKzu2V7ex.o/VjDkrx6bpAtEHy.i',
         ]);
     }
 }

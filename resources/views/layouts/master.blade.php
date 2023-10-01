@@ -34,6 +34,7 @@
     <link rel="stylesheet" href="{{ asset('template/dashboard/assets') }}/css/rtl.min.css" />
     <script src="https://kit.fontawesome.com/b713b7ce9d.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 </head>
 
 <body class="  ">
@@ -350,7 +351,7 @@
             </div>
         </div>
     </div>
-
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
     <!-- Library Bundle Script -->
     <script src="{{ asset('template/dashboard/assets') }}/js/core/libs.min.js"></script>
 
@@ -382,7 +383,8 @@
     <!-- App Script -->
     <script src="{{ asset('template/dashboard/assets') }}/js/hope-ui.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
-
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
     @stack('scripts')
 </body>

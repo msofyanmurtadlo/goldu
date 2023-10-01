@@ -80,7 +80,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link  " aria-current="page" href="">
+                        <a class="nav-link  {{ request()->routeIs('smartlinks') ? 'active' : '' }}"
+                            aria-current="page" href="{{ route('smartlinks') }}">
                             <i class="fa-solid fa-link"></i>
                             <span class="item-name">Smartlinks</span>
                         </a>
@@ -102,7 +103,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link  " aria-current="page" href="">
+                        <a class="nav-link  {{ request()->routeIs('traffics.index') ? 'active' : '' }}"
+                            aria-current="page" href="{{ route('traffics.index') }}">
                             <i class="icon">
                                 <svg class="icon-20" width="20" viewBox="0 0 24 24" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
@@ -133,6 +135,12 @@
                         <a class="nav-link  " aria-current="page" href="">
                             <i class="fa-solid fa-circle-dollar-to-slot"></i>
                             <span class="item-name">Bonuses</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link  " aria-current="page" href="">
+                            <i class="fa-solid fa-money-bill-transfer"></i>
+                            <span class="item-name">Transactions</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -170,6 +178,13 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('networks.index') ? 'active' : '' }}"
+                                href="{{ route('networks.index') }}">
+                                <i class="fa-solid fa-diagram-project"></i>
+                                <span class="item-name">Networks</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('offers.index') ? 'active' : '' }}"
                                 href="{{ route('offers.index') }}">
                                 <i class="fa-solid fa-bullhorn"></i>
@@ -181,12 +196,6 @@
                                 href="{{ route('promotions.index') }}">
                                 <i class="fa-solid fa-rectangle-ad"></i>
                                 <span class="item-name">Promotions</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link  " aria-current="page" href="">
-                                <i class="fa-solid fa-link"></i>
-                                <span class="item-name">Links</span>
                             </a>
                         </li>
                         <li class="nav-item">

@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('links', function (Blueprint $table) {
             $table->id();
+            $table->string('sub');
+            $table->string('domain');
+            $table->string('alias');
+            $table->string('host');
+            $table->string('target');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

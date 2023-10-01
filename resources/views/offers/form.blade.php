@@ -14,6 +14,22 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group">
+                                    <label for="network_id" class="form-label">Network</label>
+                                    <select id="network_id"
+                                        class="form-control @error('network_id') is-invalid @enderror" name="network_id"
+                                        required>
+                                        <option value="">Select Network</option>
+                                        @foreach ($network as $u)
+                                            <option value="{{ $u->id }}">{{ $u->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('network_id')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
                                     <label for="country" class="form-label">Country</label>
                                     <select id="country" class="form-control @error('country') is-invalid @enderror"
                                         name="country" required>

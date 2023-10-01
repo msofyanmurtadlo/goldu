@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('offers', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('network_id');
             $table->string('country');
             $table->string('url_mobile');
             $table->string('url_desktop');
-            $table->foreignId('user_id')
-                ->constrained()
-                ->onDelete('cascade');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('network_id')->references('id')->on('networks')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

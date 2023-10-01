@@ -14,9 +14,9 @@
 @endsection
 @section('content')
     @include('offers.form')
-    <div>
-        <div class="row">
-            <div class="col-sm-12">
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="row row-cols-1">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
@@ -34,7 +34,7 @@
                                     </svg>
                                 </span>
 
-                                <input id="search" class="form-control" placeholder="Search with country code">
+                                <input id="search" class="form-control" placeholder="Search Network">
                             </div>
                         </div>
                     </div>
@@ -46,6 +46,7 @@
                                 <thead>
                                     <tr class="ligth">
                                         <th>#</th>
+                                        <th>Network</th>
                                         <th>Country</th>
                                         <th>Url Mobile</th>
                                         <th>Url Desktop</th>
@@ -53,14 +54,15 @@
                                         <th style="min-width: 100px">Action</th>
                                     </tr>
                                 </thead>
-                                @php
-                                    use App\Helpers\CountryHelper;
-                                @endphp
+
                                 <tbody>
                                     @foreach ($offers as $u)
                                         <tr>
                                             <td>{{ $u->id }}</td>
-                                            <td>{{ $countryOptions[$u->country] }}</td>
+                                            <td>{{ $u->network->name }}</td>
+                                            <td> <img src="{{ asset('flags/' . strtolower($u->country) . '.png') }}"
+                                                    alt="{{ $u->country }}" /> {{ $u->country }}
+                                            </td>
                                             <td>{{ $u->url_mobile }}</td>
                                             <td>{{ $u->url_desktop }}</td>
                                             <td>
@@ -213,6 +215,7 @@
                 url: url,
                 success: function(response) {
                     // Mengatur data ke dalam elemen form pada modal
+                    $('#formModal [name=network_id]').val(response.network_id);
                     $('#formModal [name=country]').val(response.country);
                     $('#formModal [name=url_mobile]').val(response.url_mobile);
                     $('#formModal [name=url_desktop]').val(response.url_desktop);

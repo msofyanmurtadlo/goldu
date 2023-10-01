@@ -10,9 +10,9 @@
 @endsection
 
 @section('content')
-    <div>
-        <div class="row">
-            <div class="col-sm-12">
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="row row-cols-1">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
                         <div class="header-title">

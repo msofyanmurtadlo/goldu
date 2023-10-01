@@ -5,10 +5,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DomainController;
+use App\Http\Controllers\LinkController;
 use App\Http\Controllers\MyTeamController;
+use App\Http\Controllers\NetworkController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\PromotionController;
+use App\Http\Controllers\RedirectController;
+use App\Http\Controllers\TrafficController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,11 +28,12 @@ use App\Http\Controllers\PromotionController;
 Route::get('/', function () {
     return view('welcome');
 });
-
+Route::get('/redirect', [RedirectController::class, 'index'])->name('redirect');
 Auth::routes();
 Route::middleware('auth')->group(function () {
     Route::middleware('admin')->group(function () {
         Route::resource('/domains', DomainController::class)->except(['create', 'show']);
+        Route::resource('/networks', NetworkController::class)->except(['create', 'show']);
         Route::resource('/offers', OfferController::class)->except(['create', 'show']);
         Route::resource('/promotions', PromotionController::class)->except(['create', 'show']);
         Route::resource('/users', UserController::class)->except(['create', 'show']);
@@ -36,5 +41,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
     });
     Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::get('/smartlinks', [LinkController::class, 'smartlinks'])->name('smartlinks');
     Route::get('/myteams', [MyTeamController::class, 'index'])->name('myteams.index');
+    Route::get('/traffics', [TrafficController::class, 'index'])->name('traffics.index');
 });

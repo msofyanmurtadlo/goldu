@@ -3,63 +3,37 @@
 namespace App\Http\Controllers;
 
 use App\Models\link;
+use App\Models\Network;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+
 
 class LinkController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function smartlinks(Request $request)
     {
-        //
-    }
+        $startDate = $request->input('startDate');
+        $endDate = $request->input('endDate');
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+        $smartlinksQuery = link::query();
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        if (auth()->check() && !auth()->user()->is_admin) {
+            $smartlinksQuery->where('user_id', auth()->user()->id);
+        }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(link $link)
-    {
-        //
-    }
+        if ($startDate && $endDate) {
+            // Parse the start and end date using Carbon
+            $startDate = Carbon::parse($startDate)->startOfDay();
+            $endDate = Carbon::parse($endDate)->endOfDay();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(link $link)
-    {
-        //
-    }
+            $smartlinksQuery->whereBetween('created_at', [$startDate, $endDate]);
+        }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, link $link)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(link $link)
-    {
-        //
+        $smartlinks = $smartlinksQuery->orderBy('created_at', 'desc')
+            ->with('user')
+            ->paginate(10);
+        $network = Network::get();
+        $filteredCount = $smartlinks->count();
+        return view('links.smartlinks', compact('smartlinks', 'filteredCount', 'network'));
     }
 }

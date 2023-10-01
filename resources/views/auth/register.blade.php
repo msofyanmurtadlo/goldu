@@ -46,7 +46,7 @@
             </div>
             <div class="col-lg-12">
                 <div class="form-group">
-                    <label for="referal" class="form-label">Refferal (optional)</label>
+                    <label for="referal" class="form-label">Teams (optional)</label>
                     <input id="referal" type="referal" class="form-control @error('referal') is-invalid @enderror"
                         name="referal" value="{{ old('referal') }}" autocomplete="referal">
 
