@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('convertions', function (Blueprint $table) {
             $table->id();
-            $table->string('date');
-            $table->string('trx');
             $table->string('country');
-            $table->integer('amount');
+            $table->decimal('ballance', 8, 2)->default(0);
+            $table->unsignedBigInteger('network_id');
             $table->unsignedBigInteger('user_id');
+            $table->foreign('network_id')->references('id')->on('networks')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

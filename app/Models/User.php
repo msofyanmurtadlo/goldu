@@ -43,4 +43,8 @@ class User extends Authenticatable
     {
         return $this->hasOne(Bank::class);
     }
+    public function networkBallances()
+    {
+        return $this->hasMany(NetworkBallance::class);
+    }
 }

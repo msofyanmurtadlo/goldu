@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('networks', function (Blueprint $table) {
+        Schema::create('bonuses', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-            $table->string('alias')->unique();
-            $table->string('smartlink');
-            $table->string('sub1');
-            $table->string('sub2');
+            $table->string('from');
+            $table->string('country');
+            $table->decimal('ballance', 8, 2)->default(0);
+            $table->unsignedBigInteger('network_id');
             $table->unsignedBigInteger('user_id');
+            $table->foreign('network_id')->references('id')->on('networks')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('networks');
+        Schema::dropIfExists('bonuses');
     }
 };

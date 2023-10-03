@@ -42,7 +42,8 @@ class NetworkController extends Controller
             'name' => 'required|string|max:255|unique:networks,name',
             'alias' => 'required|string|max:255|unique:networks,alias',
             'smartlink' => 'required|url|max:255',
-            'subid' => 'required|string|max:255',
+            'sub1' => 'required|string|max:255',
+            'sub2' => 'required|string|max:255',
 
         ]);
 
@@ -54,7 +55,8 @@ class NetworkController extends Controller
             'name' => $request->input('name'),
             'alias' => strtoupper($request->input('alias')),
             'smartlink' => $request->input('smartlink'),
-            'subid' => $request->input('subid'),
+            'sub1' => $request->input('sub1'),
+            'sub2' => $request->input('sub2'),
 
             'user_id' => $user->id,
         ]);
@@ -84,10 +86,11 @@ class NetworkController extends Controller
     {
         // Validasi input
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255|unique:networks,name',
-            'alias' => 'required|string|max:255|unique:networks,alias',
+            'name' => 'required|string|max:255',
+            'alias' => 'required|string|max:255',
             'smartlink' => 'required|url|max:255',
-            'subid' => 'required|string|max:255',
+            'sub1' => 'required|string|max:255',
+            'sub2' => 'required|string|max:255',
 
         ]);
 
@@ -98,7 +101,8 @@ class NetworkController extends Controller
             'name' => $request->name,
             'alias' => strtoupper($request->alias),
             'smartlink' => $request->smartlink,
-            'subid' => $request->subid,
+            'sub1' => $request->sub1,
+            'sub2' => $request->sub2,
 
         ]);
 

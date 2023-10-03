@@ -12,42 +12,43 @@
 @section('content')
     <div class="row">
         <div class="col-md-12 col-lg-12">
-            <div class="row row-cols-1">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between">
-                        <div class="header-title">
-                            <h4 class="card-title">General Setting</h4>
-                        </div>
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <div class="header-title">
+                        <h4 class="card-title">General Setting</h4>
                     </div>
-                    <div class="card-body" id="view-settings">
-                        <!-- Tampilan pengaturan -->
+                </div>
+                <div class="card-body" id="view-settings">
+                    <div class="form-group">
+                        <label class="form-label" for="postback">Postback</label>
+                        <input type="text" class="form-control" id="postback"
+                            value="{{ config('app.url') . '/postback?key=' . $settings['Postback_Key'] . '&network=(aliasnetwork)&id=(postbackid)&country=(postbackcountry)&ballance=(postbackballance)' }}">
+                    </div>
+                    @foreach ($settings as $key => $value)
+                        <div class="mb-3">
+                            <label for="{{ $key }}" class="form-label">{{ str_replace('_', ' ', $key) }}</label>
+                            <input type="text" name="{{ $key }}" id="{{ $key }}" class="form-control"
+                                value="{{ $value }}" disabled>
+                        </div>
+                    @endforeach
+                    <a href="#" id="edit-settings-button" class="btn btn-primary">Edit Settings</a>
+                </div>
+
+                <div class="card-body" id="edit-settings" style="display: none;">
+                    <!-- Mode Edit -->
+                    <form action="{{ route('settings.update') }}" method="POST" id="settings-form">
+                        @csrf
                         @foreach ($settings as $key => $value)
                             <div class="mb-3">
                                 <label for="{{ $key }}"
                                     class="form-label">{{ str_replace('_', ' ', $key) }}</label>
                                 <input type="text" name="{{ $key }}" id="{{ $key }}"
-                                    class="form-control" value="{{ $value }}" disabled>
+                                    class="form-control" value="{{ $value }}">
                             </div>
                         @endforeach
-                        <a href="#" id="edit-settings-button" class="btn btn-primary">Edit Settings</a>
-                    </div>
-
-                    <div class="card-body" id="edit-settings" style="display: none;">
-                        <!-- Mode Edit -->
-                        <form action="{{ route('settings.update') }}" method="POST" id="settings-form">
-                            @csrf
-                            @foreach ($settings as $key => $value)
-                                <div class="mb-3">
-                                    <label for="{{ $key }}"
-                                        class="form-label">{{ str_replace('_', ' ', $key) }}</label>
-                                    <input type="text" name="{{ $key }}" id="{{ $key }}"
-                                        class="form-control" value="{{ $value }}">
-                                </div>
-                            @endforeach
-                            <a href="#" id="cancel-edit-button" class="btn btn-secondary">Cancel Edit</a>
-                            <button type="submit" class="btn btn-primary">Save Settings</button>
-                        </form>
-                    </div>
+                        <a href="#" id="cancel-edit-button" class="btn btn-secondary">Cancel Edit</a>
+                        <button type="submit" class="btn btn-primary">Save Settings</button>
+                    </form>
                 </div>
             </div>
         </div>

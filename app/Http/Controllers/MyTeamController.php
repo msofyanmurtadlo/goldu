@@ -24,12 +24,6 @@ class MyTeamController extends Controller
 
                 $query->whereBetween('created_at', [$startDate, $endDate]);
             }
-
-            if ($search) {
-                $query->where(function ($subQuery) use ($search) {
-                    $subQuery->where('username', 'like', "%{$search}%");
-                });
-            }
         })
             ->orderBy('created_at', 'desc')
             ->paginate(10);

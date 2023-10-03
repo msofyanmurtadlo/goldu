@@ -86,6 +86,7 @@
                             <span class="item-name">Smartlinks</span>
                         </a>
                     </li>
+
                     <li class="nav-item">
                         <a class="nav-link  {{ request()->routeIs('myteams.index') ? 'active' : '' }}"
                             aria-current="page" href="{{ route('myteams.index') }}">
@@ -93,6 +94,7 @@
                             <span class="item-name">My Teams</span>
                         </a>
                     </li>
+
                     <li>
                         <hr class="hr-horizontal">
                     </li>
@@ -126,13 +128,15 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link  " aria-current="page" href="">
+                        <a class="nav-link  {{ request()->routeIs('convertions.index') ? 'active' : '' }}"
+                            aria-current="page" href="{{ route('convertions.index') }}">
                             <i class="fa-solid fa-file-invoice-dollar"></i>
                             <span class="item-name">Convertions</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link  " aria-current="page" href="">
+                        <a class="nav-link  {{ request()->routeIs('bonuses.index') ? 'active' : '' }}"
+                            aria-current="page" href="{{ route('bonuses.index') }}">
                             <i class="fa-solid fa-circle-dollar-to-slot"></i>
                             <span class="item-name">Bonuses</span>
                         </a>
@@ -199,7 +203,8 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link  " aria-current="page" href="">
+                            <a class="nav-link {{ request()->routeIs('transfers') ? 'active' : '' }}"
+                                href="{{ route('transfers') }}">
                                 <i class="fa-solid fa-money-bill-transfer"></i>
                                 <span class="item-name">Transfers</span>
                             </a>

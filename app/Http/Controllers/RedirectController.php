@@ -23,80 +23,51 @@ class RedirectController extends Controller
         $agent = new Agent();
         $position = Location::get('$ipAddress');
         $countryCode = $position->countryCode;
-        $network = $request->input('network', $settings['Site_Name']);
-        $id = $request->input('id', $settings['Site_Name']);
+        $network = $request->input('network');
+        $id = $request->input('id');
         $alias = Network::where('alias', $network)->first();
-        if ($alias) {
-            $defaultUrl = $alias->smartlink;
-            $user = User::where('username', $id)->first();
-            if ($user) {
-                $client = new Client();
-                $response = $client->get("http://ip-api.com/json/{$ipAddress}");
-                $body = $response->getBody();
-                $data = json_decode($body);
-                if ($data && isset($data->isp)) {
-                    $isp = $data->isp;
-                } else {
-                    $isp = "Tidak dapat mendapatkan informasi ISP.";
-                }
-                $existingTraffic = Traffic::where('ip', $ipAddress)->first();
-                if ($existingTraffic) {
-                    $status = false;
-                } else {
-                    $status = true;
-                }
-                Traffic::create([
-                    'network_id' => $alias->id,
-                    'ip' => $ipAddress,
-                    'status' => $status,
-                    'country' => $countryCode,
-                    'browser' => $agent->browser(),
-                    'device' => $agent->device(),
-                    'platform' => $agent->platform(),
-                    'bot' => $agent->isRobot(),
-                    'isp' => $isp,
-                    'useragent' => $agent->getUserAgent(),
-                    'user_id' => $user->id,
-                ]);
-                if ($countryCode == 'ID' || $agent->isRobot()) {
-                    $promotion = Promotion::inRandomOrder()->first();
-                    if ($promotion) {
-                        $randomLink = $promotion->link;
-                        $urlMobile = $randomLink;
-                        $urlDesktop = $randomLink;
-                    } else {
-                        $urlMobile = $defaultPromotion;
-                        $urlDesktop = $defaultPromotion;
-                    }
-                    $urlBase = $this->determineUrlBase($agent, $urlMobile, $urlDesktop, $defaultUrl);
-                    $finalUrl = "{$urlBase}";
-                } else {
-                    $offer = Offer::where('country', $countryCode)
-                        ->where('network_id', $alias->id)
-                        ->first();
-                    $urlMobile = $offer ? $offer->url_mobile : $defaultUrl;
-                    $urlDesktop = $offer ? $offer->url_desktop : $defaultUrl;
-                    $urlBase = $this->determineUrlBase($agent, $urlMobile, $urlDesktop, $defaultUrl);
-                    $finalUrl = "{$urlBase}?{$alias->subid}={$id}";
-                }
+        $user = User::where('username', $id)->first();
+        if ($countryCode == 'ID' || !$alias || !$user) {
+            $promotion = Promotion::inRandomOrder()->first();
+            if ($promotion) {
+                $randomLink = $promotion->link;
+            } else {
+                $randomLink = $defaultPromotion;
             }
+            $urlMobile = $urlDesktop = $defaultUrl = $randomLink;
+            $urlBase = $this->determineUrlBase($agent, $urlMobile, $urlDesktop, $defaultUrl);
+            $finalUrl = $urlBase;
         } else {
-            $defaultUrl =  $defaultPromotion;
-            if ($countryCode == 'ID' || $agent->isRobot()) {
-                $promotion = Promotion::inRandomOrder()->first();
-                if ($promotion) {
-                    $randomLink = $promotion->link;
-                    $urlMobile = $randomLink;
-                    $urlDesktop = $randomLink;
-                } else {
-                    $urlMobile = $defaultPromotion;
-                    $urlDesktop = $defaultPromotion;
-                }
-                $urlBase = $this->determineUrlBase($agent, $urlMobile, $urlDesktop, $defaultUrl);
-                $finalUrl = "{$urlBase}";
-            }
+            $client = new Client();
+            $response = $client->get("http://ip-api.com/json/{$ipAddress}");
+            $body = $response->getBody();
+            $data = json_decode($body);
+            $isp = $data && isset($data->isp) ? $data->isp : "Tidak dapat mendapatkan informasi ISP.";
+            $existingTraffic = Traffic::where('ip', $ipAddress)->first();
+            $status = $existingTraffic ? false : true;
+            Traffic::create([
+                'network_id' => $alias->id,
+                'ip' => $ipAddress,
+                'status' => $status,
+                'country' => $countryCode,
+                'browser' => $agent->browser(),
+                'device' => $agent->device(),
+                'platform' => $agent->platform(),
+                'bot' => $agent->isRobot(),
+                'isp' => $isp,
+                'useragent' => $agent->getUserAgent(),
+                'user_id' => $user->id,
+            ]);
+            $offer = Offer::where('country', $countryCode)
+                ->where('network_id', $alias->id)
+                ->first();
+            $defaultUrl = $alias->smartlink;
+            $urlMobile = $offer ? $offer->url_mobile : $defaultUrl;
+            $urlDesktop = $offer ? $offer->url_desktop : $defaultUrl;
+            $urlBase = $this->determineUrlBase($agent, $urlMobile, $urlDesktop, $defaultUrl);
+            $referalName = ($user->referal == 'system') ? $settings['Site_Name'] : $user->referal;
+            $finalUrl = "{$urlBase}?{$alias->sub1}={$referalName}&{$alias->sub2}={$id}";
         }
-
         return response("
         <script type=\"text/javascript\">
             window.onload = function() {
@@ -105,7 +76,6 @@ class RedirectController extends Controller
         </script>
         ", 200)->header('Content-Type', 'text/html');
     }
-
     private function determineUrlBase(Agent $agent, $urlMobile, $urlDesktop, $defaultUrl)
     {
         if ($agent->isMobile() || $agent->isTablet()) {
@@ -136,7 +106,6 @@ class RedirectController extends Controller
         } else {
             $ip = $remote;
         }
-
         return $ip;
     }
 }

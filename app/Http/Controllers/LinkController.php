@@ -36,4 +36,9 @@ class LinkController extends Controller
         $filteredCount = $smartlinks->count();
         return view('links.smartlinks', compact('smartlinks', 'filteredCount', 'network'));
     }
+    public function destroy(Link $link)
+    {
+        $link->delete();
+        return response()->json(['message' => 'Pengguna berhasil dihapus.']);
+    }
 }

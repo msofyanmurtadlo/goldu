@@ -1,12 +1,11 @@
 @extends('layouts.master')
 @section('nav')
-    <meta name="traffic-count" content="{{ $filteredCount }}">
+    <meta name="bonus-count" content="{{ $filteredCount }}">
 
     <div class="flex-wrap d-flex justify-content-between align-items-center">
         <div>
-            <h1>Traffics</h1>
-            <p>Traffic, in this context, refers to the flow of users over a network. The data points like IP, Country,
-                Browser, and OS provide insights into the user's source and behavior.</p>
+            <h1>Bonuses</h1>
+            <p>the bonus is when you have a team and the team gets the conversion then you get 10 percent</p>
         </div>
     </div>
 @endsection
@@ -16,8 +15,8 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
-                        <h4 class="card-title mb-0 me-3">List <span id="total-traffic-count">
-                                ({{ $traffics->count() }})</span></h4>
+                        <h4 class="card-title mb-0 me-3">List <span id="total-bonus-count">
+                                ({{ $bonuses->count() }})</span></h4>
                     </div>
                     <div>
                         <div class="input-group">
@@ -32,49 +31,36 @@
 
                 <div class="card-body px-0">
                     <div class="table-responsive">
-                        <table id="traffic-list-table" class="table table-striped" role="grid"
-                            data-bs-toggle="data-table">
+                        <table id="bonus-list-table" class="table table-striped" role="grid" data-bs-toggle="data-table">
                             <thead>
                                 <tr class="ligth">
                                     <th>#</th>
+                                    <th>Trx</th>
+                                    <th>From</th>
                                     <th>Network</th>
-                                    <th>IP</th>
-                                    <th>Status</th>
                                     <th>Country</th>
-                                    <th>Browser</th>
-                                    <th>Device</th>
-                                    <th>OS</th>
-                                    <th>Bot</th>
-                                    <th>Isp</th>
-                                    <th>User Agent</th>
+                                    <th>Ballance</th>
                                     @can('admin')
                                         <th>Pemilik</th>
                                     @endcan
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($traffics as $u)
+                                @foreach ($bonuses as $u)
                                     <tr>
                                         <td>{{ $loop->remaining + 1 }}</td>
-                                        <td>{{ $u->network->alias }}</td>
-                                        <td>{{ $u->ip }}</td>
-                                        <td><span
-                                                class="badge bg-{{ $u->status == 1 ? 'primary' : 'secondary' }}">{{ $u->status == 1 ? 'New' : 'Old' }}</span>
+                                        <td>{{ '#' . $settings['Site_Name'] . '-' . $u->id }}</td>
+                                        <td>
+                                            <span class="badge bg-warning">{{ '@' . $u->from }}</span>
                                         </td>
+                                        <td>{{ $u->network->alias }}</td>
                                         <td> <img src="{{ asset('flags/' . strtolower($u->country) . '.png') }}"
                                                 alt="{{ $u->country }}" /> {{ $u->country }}
                                         </td>
-                                        <td>{{ $u->browser }}</td>
-                                        <td>{{ $u->device }}</td>
-                                        <td>{{ $u->platform }}</td>
-                                        <td><span
-                                                class="badge bg-{{ $u->bot == 1 ? 'danger' : 'success' }}">{{ $u->bot == 1 ? 'Yes' : 'No' }}</span>
-                                        </td>
-                                        <td>{{ $u->isp }}</td>
-                                        <td>{{ $u->useragent }}</td>
+                                        <td>{{ '$' . $u->ballance }}</td>
                                         @can('admin')
                                             <td>
-                                                <span class="badge bg-warning">{{ '@' . $u->user->username }}</span>
+                                                <span class="badge bg-primary">{{ '@' . $u->user->username }}</span>
                                             </td>
                                         @endcan
                                     </tr>
@@ -83,7 +69,7 @@
                         </table>
                         <nav aria-label="Page navigation">
                             <ul>
-                                {!! $traffics->links() !!}
+                                {!! $bonuses->links() !!}
                             </ul>
                         </nav>
                     </div>
@@ -105,12 +91,12 @@
                 type: 'GET',
                 url: url,
                 success: function(response) {
-                    var content = $(response).find('#traffic-list-table').parent();
-                    $('#traffic-list-table').parent().replaceWith(content);
+                    var content = $(response).find('#bonus-list-table').parent();
+                    $('#bonus-list-table').parent().replaceWith(content);
 
-                    // Assuming the backend sends the count in a meta tag, e.g., <meta name="traffic-count" content="50">
-                    var count = $(response).find('meta[name="traffic-count"]').attr('content');
-                    $('#total-traffic-count').text('(' + count + ')');
+                    // Assuming the backend sends the count in a meta tag, e.g., <meta name="bonus-count" content="50">
+                    var count = $(response).find('meta[name="bonus-count"]').attr('content');
+                    $('#total-bonus-count').text('(' + count + ')');
                 },
                 error: handleAjaxError
             });
@@ -151,17 +137,16 @@
                 var startDate = picker.startDate.format('YYYY-MM-DD');
                 var endDate = picker.endDate.format('YYYY-MM-DD');
 
-                var url = '{{ route('traffics.index') }}?startDate=' + startDate + '&endDate=' + endDate;
+                var url = '{{ route('bonuses.index') }}?startDate=' + startDate + '&endDate=' +
+                    endDate;
                 refreshTableContent(url);
             });
 
             $('#dateRangePicker').on('cancel.daterangepicker', function(ev, picker) {
                 $(this).find('span').html('');
-                var url = '{{ route('traffics.index') }}';
+                var url = '{{ route('bonuses.index') }}';
                 refreshTableContent(url);
             });
-
-
 
         });
     </script>

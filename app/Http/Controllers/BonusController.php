@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Convertion;
+use App\Models\Bonus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
-class ConvertionController extends Controller
+class BonusController extends Controller
 {
     public function index(Request $request)
     {
@@ -14,10 +14,10 @@ class ConvertionController extends Controller
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');
 
-        $convertionsQuery = Convertion::query();
+        $bonusesQuery = Bonus::query();
 
         if (auth()->check() && !auth()->user()->is_admin) {
-            $convertionsQuery->where('user_id', auth()->user()->id);
+            $bonusesQuery->where('user_id', auth()->user()->id);
         }
 
         if ($startDate && $endDate) {
@@ -25,13 +25,13 @@ class ConvertionController extends Controller
             $startDate = Carbon::parse($startDate)->startOfDay();
             $endDate = Carbon::parse($endDate)->endOfDay();
 
-            $convertionsQuery->whereBetween('created_at', [$startDate, $endDate]);
+            $bonusesQuery->whereBetween('created_at', [$startDate, $endDate]);
         }
 
-        $convertions = $convertionsQuery->orderBy('created_at', 'desc')
+        $bonuses = $bonusesQuery->orderBy('created_at', 'desc')
             ->with('user', 'network')
             ->paginate(10);
-        $filteredCount = $convertions->count();
-        return view('convertions.index', compact('convertions', 'filteredCount'));
+        $filteredCount = $bonuses->count();
+        return view('bonuses.index', compact('bonuses', 'filteredCount'));
     }
 }
