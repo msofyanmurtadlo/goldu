@@ -30,7 +30,7 @@ class BonusController extends Controller
 
         $bonuses = $bonusesQuery->orderBy('created_at', 'desc')
             ->with('user', 'network')
-            ->paginate(10);
+            ->paginate(10)->onEachSide(0);
         $filteredCount = $bonuses->count();
         return view('bonuses.index', compact('bonuses', 'filteredCount'));
     }

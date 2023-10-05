@@ -233,7 +233,6 @@
                         url: url, // Deletion URL
                         success: function(response) {
                             refreshTableContent();
-                            Swal.fire('Success!', 'Domain deleted successfully.', 'success');
                         },
                         error: handleAjaxError
                     });

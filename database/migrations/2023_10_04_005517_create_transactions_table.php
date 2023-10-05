@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bonuses', function (Blueprint $table) {
+        Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->string('from');
-            $table->string('country')->nullable();
-            $table->decimal('ballance', 8, 2)->default(0);
             $table->unsignedBigInteger('network_id');
+            $table->enum('type', ['Bonus', 'Convertion', 'Payout']);
+            $table->decimal('ballance', 8, 2)->default(0);
+            $table->decimal('amount', 8, 2)->default(0);
             $table->unsignedBigInteger('user_id');
+            $table->boolean('is_read')->default(false);
             $table->foreign('network_id')->references('id')->on('networks')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bonuses');
+        Schema::dropIfExists('transactions');
     }
 };

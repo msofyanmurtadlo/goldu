@@ -16,6 +16,7 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\RedirectController;
 use App\Http\Controllers\TrafficController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TransferController;
 
 /*
@@ -49,9 +50,12 @@ Route::middleware('auth')->group(function () {
     });
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/smartlinks', [LinkController::class, 'smartlinks'])->name('smartlinks');
+    Route::post('/smartlinks', [LinkController::class, 'gemerate'])->name('link.generate');
     Route::delete('/links/{link}', [LinkController::class, 'destroy'])->name('links.destroy');
     Route::get('/myteams', [MyTeamController::class, 'index'])->name('myteams.index');
     Route::get('/traffics', [TrafficController::class, 'index'])->name('traffics.index');
     Route::get('/convertions', [ConvertionController::class, 'index'])->name('convertions.index');
     Route::get('/bonuses', [BonusController::class, 'index'])->name('bonuses.index');
+    Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
+    Route::get('/transaction/{id}', [TransactionController::class, 'getTransactionDetails']);
 });

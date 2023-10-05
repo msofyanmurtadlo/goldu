@@ -8,11 +8,11 @@ use Illuminate\Support\Carbon;
 
 class MyTeamController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $search = $request->input('search');
-        $startDate = $request->input('startDate');
-        $endDate = $request->input('endDate');
+        $search = request('search');
+        $startDate =  request('startDate');
+        $endDate =  request('endDate');
 
         $myteams = User::when(auth()->check(), function ($query) use ($search, $startDate, $endDate) {
             $query->where('referal', auth()->user()->username);
@@ -26,7 +26,7 @@ class MyTeamController extends Controller
             }
         })
             ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->paginate(10)->onEachSide(0);
         $filteredCount = $myteams->count();
         return view('myteams.index', compact('myteams', 'filteredCount'));
     }

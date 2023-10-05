@@ -15,7 +15,7 @@ class PromotionController extends Controller
             return $query->where('name', 'like', "%{$search}%");
         })->with('user')
             ->orderBy('created_at', 'desc')  // Urutkan berdasarkan kolom created_at secara descending
-            ->paginate(10);
+            ->paginate(10)->onEachSide(0);
 
         return view('promotions.index', compact('promotions'));
     }

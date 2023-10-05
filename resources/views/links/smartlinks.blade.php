@@ -1,55 +1,26 @@
 @extends('layouts.master')
 @section('nav')
-    <meta name="smartlink-count" content="{{ $filteredCount }}">
-
     <div class="flex-wrap d-flex justify-content-between align-items-center">
         <div>
             <h1>Smartlinks</h1>
             <p>A "smartlink" is a dynamic URL that adjusts its destination based on criteria like device type or location,
                 providing a tailored user experience.</p>
         </div>
+        <div>
+            <a class="btn btn-link btn-soft-light" href="" data-bs-toggle="modal" data-bs-target="#formModal">
+                <i class="fa-solid fa-link"></i> Smartlinks
+            </a>
+        </div>
     </div>
 @endsection
 @section('content')
+    @include('links.form')
     <div class="row">
-        <div class="col-md-4 col-lg-4">
-            <div class="card">
-                <div class="card-body">
-                    <form class="row g-3 needs-validation" novalidate="">
-                        <div class="col-12 col-md-8">
-                            <select class="form-select" id="validationCustom04" required="">
-                                <option selected="" disabled="" value="">Choose Network</option>
-                                @foreach ($network as $u)
-                                    <option value="{{ $u->alias }}">Network {{ '(' . $u->alias . ')' }}</option>
-                                @endforeach
-                            </select>
-                            <div class="invalid-feedback">
-                                Please select a valid state.
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-4">
-                            <button class="btn btn-primary" type="submit">Generate</button>
-                        </div>
-                    </form>
-                    <div class="row mt-4" id="resultRow" hidden>
-                        <div class="row">
-                            <div class="col-12 col-md-12">
-                                <div class="form-group">
-                                    <textarea class="form-control" id="result1" rows="2" onclick="copyText(this)"></textarea>
-                                    <textarea class="form-control mt-3" id="result2" rows="2" onclick="copyText(this)"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-8 col-lg-8">
+        <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
-                        <h4 class="card-title mb-0 me-3">List <span id="total-smartlink-count">
-                                ({{ $smartlinks->count() }})</span></h4>
+                        <h4 class="card-title mb-0 me-3">List</h4>
                     </div>
                     <div>
                         <div class="input-group">
@@ -81,7 +52,9 @@
                             <tbody>
                                 @foreach ($smartlinks as $u)
                                     <tr>
-                                        <td>{{ $loop->remaining + 1 }}</td>
+                                        <td>{{ $smartlinks->total() - (($smartlinks->currentPage() - 1) * $smartlinks->perPage() + $loop->iteration) + 1 }}
+                                        </td>
+
                                         <td>{{ 'https://' . $u->host }}</td>
                                         <td>{{ 'https://' . $u->host . '/' . $u->alias }}</td>
                                         @can('admin')
@@ -134,9 +107,14 @@
 @endsection
 @push('scripts')
     <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
         $(document).on('click', '.pagination a', function(e) {
             e.preventDefault();
-            var url = $(this).attr('href');
+            var url = $(this).prop('href');
             refreshTableContent(url);
         });
 
@@ -147,15 +125,10 @@
                 success: function(response) {
                     var content = $(response).find('#smartlink-list-table').parent();
                     $('#smartlink-list-table').parent().replaceWith(content);
-
-                    // Assuming the backend sends the count in a meta tag, e.g., <meta name="smartlink-count" content="50">
-                    var count = $(response).find('meta[name="smartlink-count"]').attr('content');
-                    $('#total-smartlink-count').text('(' + count + ')');
                 },
                 error: handleAjaxError
             });
         }
-
 
         function handleAjaxError(xhr) {
             if (xhr.status === 422) {
@@ -165,6 +138,7 @@
                 Swal.fire('Error', xhr.statusText, 'error');
             }
         }
+
         $(document).ready(function() {
             $('#dateRangePicker').daterangepicker({
                 opens: 'left',
@@ -191,13 +165,13 @@
                 var startDate = picker.startDate.format('YYYY-MM-DD');
                 var endDate = picker.endDate.format('YYYY-MM-DD');
 
-                var url = '{{ route('smartlinks') }}?startDate=' + startDate + '&endDate=' + endDate;
+                var url = '{{ url('smartlinks') }}?startDate=' + startDate + '&endDate=' + endDate;
                 refreshTableContent(url);
             });
 
             $('#dateRangePicker').on('cancel.daterangepicker', function(ev, picker) {
                 $(this).find('span').html('');
-                var url = '{{ route('smartlinks') }}';
+                var url = '{{ url('smartlinks') }}';
                 refreshTableContent(url);
             });
         });
@@ -205,25 +179,62 @@
         function deleteData(url) {
             Swal.fire({
                 title: 'Are you sure?',
-                text: 'You will delete this user.',
+                text: 'You will delete this link.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes, Delete!',
                 cancelButtonText: 'Cancel'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // If the user clicks "Yes, Delete!" in SweetAlert
                     $.ajax({
                         type: 'DELETE',
-                        url: url, // Deletion URL
+                        url: url,
                         success: function(response) {
                             refreshTableContent();
-                            Swal.fire('Success!', 'User deleted successfully.', 'success');
                         },
                         error: handleAjaxError
                     });
                 }
             });
+        }
+
+        $('#generateForm').submit(function(event) {
+            event.preventDefault();
+
+            $('#generateButton').prop('disabled', true);
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'POST',
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function(response) {
+                    $('#generateButton').prop('disabled', false);
+                    $('#result1').val('');
+                    $('#result2').val('');
+                    $.each(response.results, function(index, result) {
+                        $('#result1').val($('#result1').val() + result.resultHost +
+                            '\n');
+                        $('#result2').val($('#result2').val() + result
+                            .resultHostAlias + '\n');
+                    });
+                    $('#resultRow').removeAttr('hidden');
+                    refreshTableContent();
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Error submitting form:', textStatus, errorThrown);
+                    $('#generateButton').prop('disabled', false);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Error: ' + jqXHR.responseJSON.error
+                    });
+                }
+            });
+        });
+
+        function copyText(element) {
+            element.select();
+            document.execCommand('copy');
         }
     </script>
 @endpush

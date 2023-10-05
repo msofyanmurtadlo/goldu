@@ -1,7 +1,5 @@
 @extends('layouts.master')
 @section('nav')
-    <meta name="traffic-count" content="{{ $filteredCount }}">
-
     <div class="flex-wrap d-flex justify-content-between align-items-center">
         <div>
             <h1>Traffics</h1>
@@ -16,8 +14,7 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
-                        <h4 class="card-title mb-0 me-3">List <span id="total-traffic-count">
-                                ({{ $traffics->count() }})</span></h4>
+                        <h4 class="card-title mb-0 me-3">List</h4>
                     </div>
                     <div>
                         <div class="input-group">
@@ -55,7 +52,8 @@
                             <tbody>
                                 @foreach ($traffics as $u)
                                     <tr>
-                                        <td>{{ $loop->remaining + 1 }}</td>
+                                        <td>{{ $traffics->total() - (($traffics->currentPage() - 1) * $traffics->perPage() + $loop->iteration) + 1 }}
+                                        </td>
                                         <td>{{ $u->network->alias }}</td>
                                         <td>{{ $u->ip }}</td>
                                         <td><span
@@ -107,10 +105,6 @@
                 success: function(response) {
                     var content = $(response).find('#traffic-list-table').parent();
                     $('#traffic-list-table').parent().replaceWith(content);
-
-                    // Assuming the backend sends the count in a meta tag, e.g., <meta name="traffic-count" content="50">
-                    var count = $(response).find('meta[name="traffic-count"]').attr('content');
-                    $('#total-traffic-count').text('(' + count + ')');
                 },
                 error: handleAjaxError
             });

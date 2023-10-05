@@ -248,7 +248,7 @@
                         url: url, // Deletion URL
                         success: function(response) {
                             refreshTableContent();
-                            Swal.fire('Success!', 'offer deleted successfully.', 'success');
+
                         },
                         error: handleAjaxError
                     });

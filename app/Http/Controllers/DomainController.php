@@ -15,7 +15,7 @@ class DomainController extends Controller
             return $query->where('domain', 'like', "%{$search}%");
         })->with('user')
             ->orderBy('created_at', 'desc')  // Urutkan berdasarkan kolom created_at secara descending
-            ->paginate(10);
+            ->paginate(10)->onEachSide(0);
 
         return view('domains.index', compact('domains'));
     }

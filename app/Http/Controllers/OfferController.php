@@ -23,7 +23,7 @@ class OfferController extends Controller
                 $query->where('name', 'like', "%{$search}%");
             })
             ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->paginate(10)->onEachSide(0);
         $network = Network::get();
         $countryOptions = CountryHelper::getCountryOptions();
         return view('offers.index', compact('offers', 'countryOptions', 'network'));

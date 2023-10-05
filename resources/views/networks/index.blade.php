@@ -257,7 +257,7 @@
                         url: url, // Deletion URL
                         success: function(response) {
                             refreshTableContent();
-                            Swal.fire('Success!', 'network deleted successfully.', 'success');
+
                         },
                         error: handleAjaxError
                     });

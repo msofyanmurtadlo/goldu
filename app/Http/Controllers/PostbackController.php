@@ -3,36 +3,50 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Bonus;
 use App\Models\Network;
 use App\Models\Convertion;
-use Illuminate\Http\Request;
+use App\Models\Transaction;
 use App\Helpers\SettingsHelper;
-use App\Models\Bonus;
+use App\Models\NetworkBallance;
+use App\Models\Traffic;
 use Stevebauman\Location\Facades\Location;
 
 class PostbackController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
         $settings = SettingsHelper::getAllSettings();
-        $key = $request->input('key');
+        $key = request('key');
         $settingsKey = $settings['Postback_Key'];
         if ($key == $settingsKey) {
-            $network = $request->input('network');
+            $network = request('network');
             $alias = Network::where('alias', $network)->first();
             if ($alias) {
-                $id = $request->input('id');
+                $id = request('id');
                 $user = User::where('username', $id)->first();
                 if ($user) {
-                    $country = $request->input('country');
-                    if (strlen($country) == 2 && ctype_upper($country)) {
-                        $country = $country;
-                    } else {
+                    $country = request('country');
+
+                    if (empty($country)) {
+                        $clickInfo = json_decode(request()->cookie('click_info'), true);
+
+                        if ($clickInfo && isset($clickInfo['id']) && isset($clickInfo['ip'])) {
+                            $traffic = Traffic::where('ip', $clickInfo['ip'])->get();
+
+                            if (isset($clickInfo['id']) && $clickInfo['id'] == $id && $traffic->isNotEmpty()) {
+                                $country = $clickInfo['country'];
+                            }
+                        }
+                    }
+
+                    if (strlen($country) != 2 || !ctype_upper($country)) {
                         $location = Location::get($country);
                         $getcountrycode = $location->countryCode;
                         $country = $getcountrycode;
                     }
-                    $ballance = $request->input('ballance');
+
+                    $ballance = request('ballance');
                     if ($user->custom_fee) {
                         $defaultFee = $user->fee;
                     } else {
@@ -48,13 +62,41 @@ class PostbackController extends Controller
                             Bonus::create([
                                 'from'  => $user->username,
                                 'country' =>  $country,
-                                'ballance' =>  $amountToReferal,  // Change here to reflect the bonus amount
+                                'ballance' =>  $amountToReferal,
                                 'network_id' =>  $alias->id,
                                 'user_id' => $referal->id
+                            ]);
+                            NetworkBallance::where('user_id', $referal->id)
+                                ->where('network_id', $alias->id)
+                                ->increment('balance', $amountToReferal);
+                            User::where('id', $referal->id)->increment('ballance', $amountToReferal);
+                            $transaction = Transaction::where('user_id', $referal->id)->orderBy('created_at', 'desc')->first();
+                            $newAmount = ($transaction ? $transaction->amount : 0) + $ballance;
+                            Transaction::create([
+                                'network_id' => $alias->id,
+                                'type' => 'Bonus',
+                                'ballance' => $amountToReferal,
+                                'amount' => $newAmount,
+                                'user_id' => $referal->id,
+                                'is_read' => false,
                             ]);
                             $ballance -= $amountToReferal;
                         }
                     }
+                    $transaction = Transaction::where('user_id',  $user->id)->orderBy('created_at', 'desc')->first();
+                    $newAmount = ($transaction ? $transaction->amount : 0) + $ballance;
+                    Transaction::create([
+                        'network_id' => $alias->id,
+                        'type' => 'Convertion',
+                        'ballance' => $ballance,
+                        'amount' => $newAmount,
+                        'user_id' => $user->id,
+                        'is_read' => false,
+                    ]);
+                    NetworkBallance::where('user_id', $user->id)
+                        ->where('network_id', $alias->id)
+                        ->increment('balance', $ballance);
+                    User::where('id', $user->id)->increment('ballance', $ballance);
                     Convertion::create([
                         'country' =>  $country,
                         'ballance' =>  $ballance,
@@ -62,7 +104,10 @@ class PostbackController extends Controller
                         'user_id' => $user->id
                     ]);
                 }
+                return '';
             }
+            return '';
         }
+        return '';
     }
 }

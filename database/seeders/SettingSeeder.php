@@ -23,7 +23,7 @@ class SettingSeeder extends Seeder
         ]);
         DB::table('settings')->insert([
             'key' => 'Default_Fee',
-            'value' => '30',
+            'value' => '20',
         ]);
         DB::table('settings')->insert([
             'key' => 'Activation_Link',

@@ -1,7 +1,5 @@
 @extends('layouts.master')
 @section('nav')
-    <meta name="bonus-count" content="{{ $filteredCount }}">
-
     <div class="flex-wrap d-flex justify-content-between align-items-center">
         <div>
             <h1>Bonuses</h1>
@@ -15,8 +13,7 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
-                        <h4 class="card-title mb-0 me-3">List <span id="total-bonus-count">
-                                ({{ $bonuses->count() }})</span></h4>
+                        <h4 class="card-title mb-0 me-3">List </h4>
                     </div>
                     <div>
                         <div class="input-group">
@@ -35,7 +32,7 @@
                             <thead>
                                 <tr class="ligth">
                                     <th>#</th>
-                                    <th>Trx</th>
+                                    <th>Date</th>
                                     <th>From</th>
                                     <th>Network</th>
                                     <th>Country</th>
@@ -49,7 +46,7 @@
                                 @foreach ($bonuses as $u)
                                     <tr>
                                         <td>{{ $loop->remaining + 1 }}</td>
-                                        <td>{{ '#' . $settings['Site_Name'] . '-' . $u->id }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($u->created_at)->format('d/m/Y') }}</td>
                                         <td>
                                             <span class="badge bg-warning">{{ '@' . $u->from }}</span>
                                         </td>
@@ -57,7 +54,8 @@
                                         <td> <img src="{{ asset('flags/' . strtolower($u->country) . '.png') }}"
                                                 alt="{{ $u->country }}" /> {{ $u->country }}
                                         </td>
-                                        <td>{{ '$' . $u->ballance }}</td>
+                                        <td>{{ $u->ballance < 0 ? '-$' . number_format(abs($u->ballance), 2) : '$' . number_format($u->ballance, 2) }}
+                                        </td>
                                         @can('admin')
                                             <td>
                                                 <span class="badge bg-primary">{{ '@' . $u->user->username }}</span>
@@ -93,10 +91,6 @@
                 success: function(response) {
                     var content = $(response).find('#bonus-list-table').parent();
                     $('#bonus-list-table').parent().replaceWith(content);
-
-                    // Assuming the backend sends the count in a meta tag, e.g., <meta name="bonus-count" content="50">
-                    var count = $(response).find('meta[name="bonus-count"]').attr('content');
-                    $('#total-bonus-count').text('(' + count + ')');
                 },
                 error: handleAjaxError
             });

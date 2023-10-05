@@ -8,11 +8,11 @@ use Illuminate\Support\Carbon;
 
 class ConvertionController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
 
-        $startDate = $request->input('startDate');
-        $endDate = $request->input('endDate');
+        $startDate =  request('startDate');
+        $endDate =  request('endDate');
 
         $convertionsQuery = Convertion::query();
 
@@ -30,7 +30,7 @@ class ConvertionController extends Controller
 
         $convertions = $convertionsQuery->orderBy('created_at', 'desc')
             ->with('user', 'network')
-            ->paginate(10);
+            ->paginate(10)->onEachSide(0);
         $filteredCount = $convertions->count();
         return view('convertions.index', compact('convertions', 'filteredCount'));
     }

@@ -2,7 +2,7 @@
     <!--Nav Start-->
     <nav class="nav navbar navbar-expand-lg navbar-light iq-navbar">
         <div class="container-fluid navbar-inner">
-            <a href="../dashboard/index.html" class="navbar-brand">
+            <a href="{{ route('home') }}" class="navbar-brand">
                 <!--Logo start-->
                 <!--logo End-->
 
@@ -81,68 +81,52 @@
                             <div class="m-0 shadow-none card">
                                 <div class="py-3 card-header d-flex justify-content-between bg-primary">
                                     <div class="header-title">
-                                        <h5 class="mb-0 text-white">All Notifications</h5>
+                                        <h5 class="mb-0 text-white">Transaction {{ '(' . $notifcount . ')' }}
+                                        </h5>
                                     </div>
                                 </div>
                                 <div class="p-0 card-body">
-                                    <a href="#" class="iq-sub-card">
-                                        <div class="d-flex align-items-center">
-                                            <img class="p-1 avatar-40 rounded-pill bg-soft-primary"
-                                                src="{{ asset('template/dashboard/assets') }}/images/shapes/01.png"
-                                                alt="">
-                                            <div class="ms-3 w-100">
-                                                <h6 class="mb-0 ">Emma Watson Bni</h6>
-                                                <div class="d-flex justify-content-between align-items-center">
-                                                    <p class="mb-0">95 MB</p>
-                                                    <small class="float-end font-size-12">Just Now</small>
+                                    @foreach ($notif as $u)
+                                        <div class="iq-sub-card">
+                                            <div class="d-flex align-items-center">
+                                                <div
+                                                    class="p-1 avatar-40 rounded-pill bg-soft-primary d-flex justify-content-center align-items-center">
+                                                    @if ($u->type == 'Convertion')
+                                                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                                                    @elseif ($u->type == 'Bonus')
+                                                        <i class="fa-solid fa-circle-dollar-to-slot"></i>
+                                                    @else
+                                                        <i class="icon">
+                                                            <svg class="icon-20" width="20" viewBox="0 0 24 24"
+                                                                fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                                    d="M21.9964 8.37513H17.7618C15.7911 8.37859 14.1947 9.93514 14.1911 11.8566C14.1884 13.7823 15.7867 15.3458 17.7618 15.3484H22V15.6543C22 19.0136 19.9636 21 16.5173 21H7.48356C4.03644 21 2 19.0136 2 15.6543V8.33786C2 4.97862 4.03644 3 7.48356 3H16.5138C19.96 3 21.9964 4.97862 21.9964 8.33786V8.37513ZM6.73956 8.36733H12.3796H12.3831H12.3902C12.8124 8.36559 13.1538 8.03019 13.152 7.61765C13.1502 7.20598 12.8053 6.87318 12.3831 6.87491H6.73956C6.32 6.87664 5.97956 7.20858 5.97778 7.61852C5.976 8.03019 6.31733 8.36559 6.73956 8.36733Z"
+                                                                    fill="currentColor"></path>
+                                                                <path opacity="0.4"
+                                                                    d="M16.0374 12.2966C16.2465 13.2478 17.0805 13.917 18.0326 13.8996H21.2825C21.6787 13.8996 22 13.5715 22 13.166V10.6344C21.9991 10.2297 21.6787 9.90077 21.2825 9.8999H17.9561C16.8731 9.90338 15.9983 10.8024 16 11.9102C16 12.0398 16.0128 12.1695 16.0374 12.2966Z"
+                                                                    fill="currentColor"></path>
+                                                                <circle cx="18" cy="11.8999" r="1"
+                                                                    fill="currentColor">
+                                                                </circle>
+                                                            </svg></i>
+                                                    @endif
+                                                </div>
+                                                <div class="ms-3 w-100">
+                                                    <h6 class="mb-0 ">{{ $u->type }}</h6>
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <p>{{ $u->ballance < 0 ? '(-$' . number_format(abs($u->ballance), 2) . ')' : '$' . number_format($u->ballance, 2) }}
+                                                        </p>
+                                                        <small
+                                                            class="float-end font-size-12">{{ \Carbon\Carbon::parse($u->created_at)->format('d/m/Y') }}
+                                                        </small>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </a>
-                                    <a href="#" class="iq-sub-card">
-                                        <div class="d-flex align-items-center">
-                                            <div class="">
-                                                <img class="p-1 avatar-40 rounded-pill bg-soft-primary"
-                                                    src="{{ asset('template/dashboard/assets') }}/images/shapes/02.png"
-                                                    alt="">
-                                            </div>
-                                            <div class="ms-3 w-100">
-                                                <h6 class="mb-0 ">New customer is join</h6>
-                                                <div class="d-flex justify-content-between align-items-center">
-                                                    <p class="mb-0">Cyst Bni</p>
-                                                    <small class="float-end font-size-12">5 days ago</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="iq-sub-card">
-                                        <div class="d-flex align-items-center">
-                                            <img class="p-1 avatar-40 rounded-pill bg-soft-primary"
-                                                src="{{ asset('template/dashboard/assets') }}/images/shapes/03.png"
-                                                alt="">
-                                            <div class="ms-3 w-100">
-                                                <h6 class="mb-0 ">Two customer is left</h6>
-                                                <div class="d-flex justify-content-between align-items-center">
-                                                    <p class="mb-0">Cyst Bni</p>
-                                                    <small class="float-end font-size-12">2 days ago</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="iq-sub-card">
-                                        <div class="d-flex align-items-center">
-                                            <img class="p-1 avatar-40 rounded-pill bg-soft-primary"
-                                                src="{{ asset('template/dashboard/assets') }}/images/shapes/04.png"
-                                                alt="">
-                                            <div class="w-100 ms-3">
-                                                <h6 class="mb-0 ">New Mail from Fenny</h6>
-                                                <div class="d-flex justify-content-between align-items-center">
-                                                    <p class="mb-0">Cyst Bni</p>
-                                                    <small class="float-end font-size-12">3 days ago</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
+                                    @endforeach
+                                </div>
+                                <div class="p-0 card-footer d-flex justify-content-center align-items-center">
+                                    <a href="{{ route('transactions.index') }}">Views All</a>
                                 </div>
                             </div>
                         </div>
@@ -150,7 +134,7 @@
                     <li class="nav-item">
                         <a href="#" class="nav-link" id="notification-drop">
                             <i class="fa-solid fa-dollar-sign"></i>
-                            usd
+                            {{ Auth::user()->ballance }}
                             <span class="bg-danger dots"></span>
                         </a>
                     </li>

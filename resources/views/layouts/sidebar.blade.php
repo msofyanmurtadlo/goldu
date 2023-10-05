@@ -142,7 +142,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link  " aria-current="page" href="">
+                        <a class="nav-link  {{ request()->routeIs('transactions.index') ? 'active' : '' }}"
+                            aria-current="page" href="{{ route('transactions.index') }}">
                             <i class="fa-solid fa-money-bill-transfer"></i>
                             <span class="item-name">Transactions</span>
                         </a>

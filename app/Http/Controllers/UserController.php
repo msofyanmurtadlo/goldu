@@ -22,7 +22,7 @@ class UserController extends Controller
             return $query->where('username', 'like', "%{$search}%");
         })
             ->orderBy('created_at', 'desc')  // Urutkan berdasarkan kolom created_at secara descending
-            ->paginate(10);
+            ->paginate(10)->onEachSide(0);
 
         return view('users.index', compact('users'));
     }

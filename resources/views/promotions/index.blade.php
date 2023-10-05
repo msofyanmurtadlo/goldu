@@ -233,7 +233,7 @@
                         url: url, // Deletion URL
                         success: function(response) {
                             refreshTableContent();
-                            Swal.fire('Success!', 'Promotion deleted successfully.', 'success');
+
                         },
                         error: handleAjaxError
                     });

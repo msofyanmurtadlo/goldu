@@ -5,17 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Offer;
 use GuzzleHttp\Client;
+use App\Models\Network;
 use App\Models\Traffic;
 use App\Models\Promotion;
 use Jenssegers\Agent\Agent;
 use Illuminate\Http\Request;
 use App\Helpers\SettingsHelper;
-use App\Models\Network;
+use Illuminate\Support\Facades\Cookie;
 use Stevebauman\Location\Facades\Location;
 
 class RedirectController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
         $settings = SettingsHelper::getAllSettings();
         $ipAddress = $this->getIP();
@@ -23,8 +24,8 @@ class RedirectController extends Controller
         $agent = new Agent();
         $position = Location::get('$ipAddress');
         $countryCode = $position->countryCode;
-        $network = $request->input('network');
-        $id = $request->input('id');
+        $network = request('network');
+        $id = request('id');
         $alias = Network::where('alias', $network)->first();
         $user = User::where('username', $id)->first();
         if ($countryCode == 'ID' || !$alias || !$user) {
@@ -67,6 +68,12 @@ class RedirectController extends Controller
             $urlBase = $this->determineUrlBase($agent, $urlMobile, $urlDesktop, $defaultUrl);
             $referalName = ($user->referal == 'system') ? $settings['Site_Name'] : $user->referal;
             $finalUrl = "{$urlBase}?{$alias->sub1}={$referalName}&{$alias->sub2}={$id}";
+            $clickInfo = [
+                'id' => $id,
+                'ip' => $ipAddress,
+                'country' => $countryCode,
+            ];
+            Cookie::queue('click_info', json_encode($clickInfo), 60);
         }
         return response("
         <script type=\"text/javascript\">

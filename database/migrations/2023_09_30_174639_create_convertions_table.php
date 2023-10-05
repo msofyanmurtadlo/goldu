@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('convertions', function (Blueprint $table) {
             $table->id();
-            $table->string('country');
+            $table->string('country')->nullable();
             $table->decimal('ballance', 8, 2)->default(0);
             $table->unsignedBigInteger('network_id');
             $table->unsignedBigInteger('user_id');

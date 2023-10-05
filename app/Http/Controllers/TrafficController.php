@@ -8,11 +8,11 @@ use Illuminate\Support\Carbon;
 
 class TrafficController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
 
-        $startDate = $request->input('startDate');
-        $endDate = $request->input('endDate');
+        $startDate =  request('startDate');
+        $endDate =  request('endDate');
 
         $trafficsQuery = Traffic::query();
 
@@ -30,7 +30,7 @@ class TrafficController extends Controller
 
         $traffics = $trafficsQuery->orderBy('created_at', 'desc')
             ->with('user', 'network')
-            ->paginate(10);
+            ->paginate(10)->onEachSide(0);
         $filteredCount = $traffics->count();
         return view('traffics.index', compact('traffics', 'filteredCount'));
     }

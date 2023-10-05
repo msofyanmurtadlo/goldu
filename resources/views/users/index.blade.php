@@ -68,7 +68,7 @@
                                 @foreach ($users as $u)
                                     <tr>
                                         <td>{{ $u->id }}</td>
-                                        <td><span class="badge bg-warning">{{ '@' . $u->username }}</span>
+                                        <td><span class="badge bg-secondary">{{ '@' . $u->username }}</span>
                                         </td>
                                         <td>{{ $u->name }}</td>
                                         <td>{{ $u->email }}</td>
@@ -273,7 +273,7 @@
                         url: url, // Deletion URL
                         success: function(response) {
                             refreshTableContent();
-                            Swal.fire('Success!', 'User deleted successfully.', 'success');
+
                         },
                         error: handleAjaxError
                     });
