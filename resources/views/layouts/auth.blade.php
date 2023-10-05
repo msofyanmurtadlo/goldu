@@ -41,8 +41,7 @@
                         <div class="col-md-10">
                             <div class="card card-transparent shadow-none d-flex justify-content-center mb-0 auth-card">
                                 <div class="card-body">
-                                    <a href="../../dashboard/index.html"
-                                        class="navbar-brand d-flex align-items-center mb-3">
+                                    <a href="" class="navbar-brand d-flex align-items-center mb-3">
                                         <!--Logo start-->
                                         <!--logo End-->
 
@@ -88,7 +87,7 @@
 
 
 
-                                        <h4 class="logo-title ms-3">{{ config('app.name') }}</h4>
+                                        <h4 class="logo-title ms-3">{{ $settings['Site_Name'] }}</h4>
                                     </a>
 
                                     @yield('content')

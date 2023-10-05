@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Network;
 use App\Models\User;
+use App\Models\Network;
+use App\Models\Payment;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
+use App\Models\NetworkBallance;
+use Illuminate\Support\Facades\Validator;
 
 
 class TransferController extends Controller
@@ -29,5 +33,49 @@ class TransferController extends Controller
     {
         $user->load(['networkBallances.network', 'bank']);
         return view('transfers.now', compact('user'));
+    }
+    public function transfer(Request $request)
+    {
+        $inputData = $request->all();
+        $inputData['startDate'] = \Carbon\Carbon::createFromFormat('d/m/Y', $request->input('startDate'))->format('Y-m-d');
+        $inputData['endDate'] = \Carbon\Carbon::createFromFormat('d/m/Y', $request->input('endDate'))->format('Y-m-d');
+
+        // Validate the request data
+        $validator = Validator::make($inputData, [
+            'startDate' => ['required', 'date_format:Y-m-d'],
+            'endDate' => ['required', 'date_format:Y-m-d'],
+            'network_id' => ['required', 'integer'],
+            'ballance' => ['required', 'numeric'],
+            'imgurl' => 'required|url|max:255',
+            'rate' => ['required', 'numeric'],
+            'amount' => ['required', 'numeric'],
+            'method' => ['required', 'string', 'max:255'],
+            'user_id' => ['required', 'integer'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        // Create a new Payment instance and store it in the database
+        Payment::create($validator->validated());
+        $transaction = Transaction::where('user_id',  $inputData['user_id'])->orderBy('created_at', 'desc')->first();
+        $negatif = $inputData['ballance'] = -1 * abs($inputData['ballance']);
+        $newAmount = ($transaction ? $transaction->amount : 0) + $negatif;
+        Transaction::create([
+            'network_id' => $request->input('network_id'),
+            'type' => 'Payout',
+            'ballance' => $negatif,
+            'amount' => $newAmount,
+            'user_id' => $inputData['user_id'],
+            'is_read' => false,
+        ]);
+        NetworkBallance::where('user_id', $inputData['user_id'])
+            ->where('network_id', $inputData['network_id'])
+            ->increment('balance', $negatif);
+        User::where('id', $inputData['user_id'])->increment('ballance', $negatif);
+
+        // Return a success response
+        return redirect(route('transfers'))->with(['success' => 'Transfer successfully'], 201);
     }
 }

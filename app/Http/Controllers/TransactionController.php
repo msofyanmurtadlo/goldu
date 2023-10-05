@@ -21,7 +21,6 @@ class TransactionController extends Controller
         }
 
         if ($startDate && $endDate) {
-            // Parse the start and end date using Carbon
             $startDate = Carbon::parse($startDate)->startOfDay();
             $endDate = Carbon::parse($endDate)->endOfDay();
 

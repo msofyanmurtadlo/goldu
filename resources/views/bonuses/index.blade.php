@@ -45,7 +45,8 @@
                             <tbody>
                                 @foreach ($bonuses as $u)
                                     <tr>
-                                        <td>{{ $loop->remaining + 1 }}</td>
+                                        <td>{{ $bonuses->total() - (($bonuses->currentPage() - 1) * $bonuses->perPage() + $loop->iteration) + 1 }}
+                                        </td>
                                         <td>{{ \Carbon\Carbon::parse($u->created_at)->format('d/m/Y') }}</td>
                                         <td>
                                             <span class="badge bg-warning">{{ '@' . $u->from }}</span>

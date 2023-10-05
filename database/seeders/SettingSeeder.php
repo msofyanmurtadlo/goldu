@@ -42,5 +42,9 @@ class SettingSeeder extends Seeder
             'key' => 'Postback_Key',
             'value' => '$2a$12$3FMmdurPIjC7WcDEZwcuIu.UnaKzu2V7ex.o/VjDkrx6bpAtEHy.i',
         ]);
+        DB::table('settings')->insert([
+            'key' => 'BCDN_Key',
+            'value' => '64a57e0c-b6ee-4f28-9a1051aeb45b-4c38-4e46',
+        ]);
     }
 }

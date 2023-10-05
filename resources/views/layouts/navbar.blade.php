@@ -132,7 +132,7 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link" id="notification-drop">
+                        <a href="{{ route('payments.index') }}" class="nav-link" id="notification-drop">
                             <i class="fa-solid fa-dollar-sign"></i>
                             {{ Auth::user()->ballance }}
                             <span class="bg-danger dots"></span>
@@ -165,7 +165,7 @@
                             </div>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="../dashboard/app/user-profile.html">Profile</a>
+                            <li><a class="dropdown-item" href="{{ route('profile.index') }}">Profile</a>
                             </li>
 
                             <li>

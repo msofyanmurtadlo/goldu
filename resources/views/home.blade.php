@@ -46,10 +46,9 @@
                                                 class="text-center circle-progress-01 circle-progress circle-progress-info"
                                                 data-min-value="0" data-max-value="{{ $r->ballance }}"
                                                 data-value="{{ $n->balance }}" data-type="percent">
-                                                <svg class="card-slie-arrow icon-24" width="24px" viewBox="0 0 24 24">
-                                                    <path fill="currentColor"
-                                                        d="M5,17.59L15.59,7H9V5H19V15H17V8.41L6.41,19L5,17.59Z" />
-                                                </svg>
+                                                <i class="card-slie-arrow icon-24" width="24" viewBox="0 0 24 24">
+                                                    <i class="fa-solid fa-diagram-project"></i>
+                                                </i>
                                             </div>
                                             <div class="progress-detail">
                                                 <p class="mb-2">Network {{ $n->network->alias }}</p>
@@ -67,10 +66,9 @@
                                         class="text-center circle-progress-01 circle-progress circle-progress-primary"
                                         data-min-value="0" data-max-value="{{ $convertionall }}"
                                         data-value="{{ $convertionuser }}" data-type="percent">
-                                        <svg class="card-slie-arrow icon-24" width="24" viewBox="0 0 24 24">
-                                            <path fill="currentColor"
-                                                d="M19,6.41L17.59,5L7,15.59V9H5V19H15V17H8.41L19,6.41Z" />
-                                        </svg>
+                                        <i class="card-slie-arrow icon-24" width="24" viewBox="0 0 24 24">
+                                            <i class="fa-solid fa-dollar"></i>
+                                        </i>
                                     </div>
                                     <div class="progress-detail">
                                         <p class="mb-2">All Incomes</p>
@@ -86,10 +84,9 @@
                                         class="text-center circle-progress-01 circle-progress circle-progress-info"
                                         data-min-value="0" data-max-value="{{ $bonusall }}"
                                         data-value="{{ $bonususer }}" data-type="percent">
-                                        <svg class="card-slie-arrow icon-24 " width="24" viewBox="0 0 24 24">
-                                            <path fill="currentColor"
-                                                d="M19,6.41L17.59,5L7,15.59V9H5V19H15V17H8.41L19,6.41Z" />
-                                        </svg>
+                                        <i class="card-slie-arrow icon-24" width="24" viewBox="0 0 24 24">
+                                            <i class="fa-solid fa-circle-dollar-to-slot"></i>
+                                        </i>
                                     </div>
                                     <div class="progress-detail">
                                         <p class="mb-2">All Bonuses</p>
@@ -101,15 +98,14 @@
                         <li class="swiper-slide card card-slide" data-aos="fade-up" data-aos-delay="1300">
                             <div class="card-body">
                                 <div class="progress-widget">
-                                    <div id="circle-progress-04"
+                                    <div id="circle-progress-01"
                                         class="text-center circle-progress-01 circle-progress circle-progress-primary"
                                         data-min-value="0" data-max-value="{{ $ballanceall }}"
                                         data-value="{{ Auth::user()->ballance }}" data-type="percent" role="progressbar"
                                         aria-valuemin="0" aria-valuemax="100" aria-valuenow="60">
-                                        <svg class="card-slie-arrow icon-24" width="24px" viewBox="0 0 24 24">
-                                            <path fill="currentColor"
-                                                d="M5,17.59L15.59,7H9V5H19V15H17V8.41L6.41,19L5,17.59Z"></path>
-                                        </svg>
+                                        <i class="card-slie-arrow icon-24" width="24" viewBox="0 0 24 24">
+                                            <i class="fa-solid fa-dollar"></i>
+                                        </i>
                                         <svg version="1.1" width="100" height="100" viewBox="0 0 100 100"
                                             class="circle-progress">
                                             <circle class="circle-progress-circle" cx="50" cy="50"
@@ -267,8 +263,9 @@
                                 </div>
                             </div>
                             <div class="grid-cols-2 d-grid gap-card">
-                                <button class="p-2 btn btn-primary text-uppercase">Bank Setting</button>
-                                <a href="#" class="p-2 btn btn-info text-uppercase">View
+                                <a href="{{ route('profile.index') }}" class="p-2 btn btn-primary text-uppercase">Bank
+                                    Setting</a>
+                                <a href="{{ route('payments.index') }}" class="p-2 btn btn-info text-uppercase">View
                                     Payment</a>
                             </div>
                         </div>

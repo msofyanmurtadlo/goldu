@@ -11,7 +11,9 @@ use App\Http\Controllers\LinkController;
 use App\Http\Controllers\MyTeamController;
 use App\Http\Controllers\NetworkController;
 use App\Http\Controllers\OfferController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PostbackController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\RedirectController;
@@ -44,6 +46,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('/promotions', PromotionController::class)->except(['create', 'show']);
         Route::get('/transfers', [TransferController::class, 'index'])->name('transfers');
         Route::get('/transfers/{user}', [TransferController::class, 'now'])->name('transfers.now');
+        Route::post('/transfers', [TransferController::class, 'transfer'])->name('transfers.post');
         Route::resource('/users', UserController::class)->except(['create', 'show']);
         Route::get('/settings', [SettingController::class, 'index'])->name('settings');
         Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
@@ -58,4 +61,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/bonuses', [BonusController::class, 'index'])->name('bonuses.index');
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
     Route::get('/transaction/{id}', [TransactionController::class, 'getTransactionDetails']);
+    Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::post('/profile/update', [ProfileController::class, 'updatePassword'])->name('profile.update');
+    Route::post('/profile', [ProfileController::class, 'bank'])->name('profile.bank');
 });

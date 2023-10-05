@@ -9,6 +9,12 @@
 @endsection
 @section('content')
     <div class="col-md-12 col-lg-12">
+        @if (session('success'))
+            <div class="alert alert-success d-flex align-items-center" role="alert">
+                <span>{{ session('success') }}</span>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
         <div class="overflow-hidden card aos-init aos-animate" data-aos="fade-up" data-aos-delay="600">
             <div class="flex-wrap card-header d-flex justify-content-between">
                 <div class="header-title">
