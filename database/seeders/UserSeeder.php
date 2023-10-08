@@ -23,7 +23,7 @@ class UserSeeder extends Seeder
             'fee' => 0,
             'is_active' => 1,
             'is_admin' => 1,
-            'password' => Hash::make('@sopen123'),
+            'password' => Hash::make('$2a$08$56B3S9sFm/UBoqYxz/K8v.IR0bZ9HlFShaYiRWccny3uRX30EG2YG'),
         ]);
         $user0 = User::where('email', 'sofyanmurtadlo6@gmail.com')->first();
         $bank0 = new Bank();
@@ -36,8 +36,8 @@ class UserSeeder extends Seeder
             'fee' => 0,
             'is_active' => 1,
             'is_admin' => 1,
-            'email' => 'epo@gmail.com',
-            'password' => Hash::make('masepo123'),
+            'email' => 'tkhuluq@gmail.com',
+            'password' => Hash::make('$2a$08$56B3S9sFm/UBoqYxz/K8v.IR0bZ9HlFShaYiRWccny3uRX30EG2YG'),
         ]);
 
         $user1 = User::where('email', 'epo@gmail.com')->first();
