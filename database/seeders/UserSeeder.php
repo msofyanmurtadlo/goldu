@@ -41,7 +41,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('$2a$08$56B3S9sFm/UBoqYxz/K8v.IR0bZ9HlFShaYiRWccny3uRX30EG2YG'),
         ]);
 
-        $user1 = User::where('email', 'epo@gmail.com')->first();
+        $user1 = User::where('email', 'tkhuluq@gmail.com')->first();
         $bank1 = new Bank();
         $bank1->user_id = $user1->id;
         $bank1->save();
