@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
     {
         DB::table('users')->insert([
             'name' => 'Muhammad Sofyan Murtadlo',
-            'username' => 'sopen',
+            'username' => 'Sopen',
             'email' => 'sofyanmurtadlo6@gmail.com',
             'custom_fee' => 1,
             'fee' => 0,
@@ -32,6 +32,7 @@ class UserSeeder extends Seeder
 
         DB::table('users')->insert([
             'name' => 'Thorikul Khuluq',
+            'username' => 'Epo',
             'custom_fee' => 1,
             'fee' => 0,
             'is_active' => 1,
