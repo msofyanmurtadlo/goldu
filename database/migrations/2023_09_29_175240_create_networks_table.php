@@ -16,8 +16,9 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->string('alias')->unique();
             $table->string('smartlink');
-            $table->string('sub1');
-            $table->string('sub2');
+            $table->string('tracker')->nullable();
+            $table->string('sub1')->nullable();
+            $table->string('cid')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();

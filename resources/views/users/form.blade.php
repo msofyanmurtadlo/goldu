@@ -53,6 +53,23 @@
                                     @enderror
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3 align-self-center mb-0" for="id_card">ID
+                                    Card</label>
+                                <div class="input-group align-items-center">
+                                    <input type="text" name="id_card" id="id_card"
+                                        class="form-control form-control-sm" placeholder="https://">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">
+                                            <label for="image" class="btn btn-success btn-sm mb-0">
+                                                <i class="fas fa-upload"></i> Upload Image
+                                                <input type="file" name="image" id="image" accept="image/*"
+                                                    style="display: none;">
+                                            </label>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-lg-12">
                                 <div class="form-group">
                                     <label for="is_active" class="form-label">Status</label>

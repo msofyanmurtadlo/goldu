@@ -23,6 +23,7 @@ return new class extends Migration
             $table->boolean('bot');
             $table->string('isp');
             $table->string('useragent');
+            $table->string('cid');
             $table->unsignedBigInteger('user_id');
             $table->foreign('network_id')->references('id')->on('networks')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

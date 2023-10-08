@@ -58,6 +58,7 @@
                                     <th>Username</th>
                                     <th>Full Name</th>
                                     <th>Email</th>
+                                    <th>ID Card</th>
                                     <th>Custom Fee</th>
                                     <th>Referal</th>
                                     <th>Status</th>
@@ -72,6 +73,13 @@
                                         </td>
                                         <td>{{ $u->name }}</td>
                                         <td>{{ $u->email }}</td>
+                                        <td>
+                                            @if ($u->id_card)
+                                                <a href="{{ $u->id_card }}" target="_blank">Detail ID Card</a>
+                                            @else
+                                                Nothing
+                                            @endif
+                                        </td>
                                         @if ($u->custom_fee)
                                             <td>{{ $u->fee }} %</td>
                                         @else
@@ -156,6 +164,30 @@
             var url = $(this).attr('href');
             refreshTableContent(url);
         });
+        document.addEventListener('DOMContentLoaded', function() {
+            const accessKey = "{{ $settings['BCDN_Key'] }}";
+            const imgPath = "idcard/";
+            const fileInput = document.getElementById('image');
+            fileInput.addEventListener('change', function() {
+                const file = fileInput.files[0];
+                if (!file) return;
+                const originalFileName = file.name;
+                const fileExtension = originalFileName.split('.').pop().toLowerCase();
+                const fileName = new Date().getTime() + '_' + Math.random().toString(36).substring(2, 15) +
+                    Math.random().toString(36).substring(2, 15) + '.' + fileExtension;
+                const imgUrl = `https://mylink12.b-cdn.net/${imgPath}${fileName}`;
+                document.getElementById('id_card').value = imgUrl;
+                const url = `https://storage.bunnycdn.com/mylink12/${imgPath}${fileName}`;
+                fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'content-type': 'application/octet-stream',
+                        'AccessKey': accessKey
+                    },
+                    body: file
+                });
+            });
+        });
 
         function handleFormSubmit(e) {
             e.preventDefault();
@@ -233,6 +265,7 @@
                     $('#formModal [name=username]').val(response.username);
                     $('#formModal [name=username]').prop('disabled', true);
                     $('#formModal [name=email]').val(response.email);
+                    $('#formModal [name=id_card]').val(response.id_card);
                     $('#formModal [name=custom_fee]').val(response.custom_fee);
                     if (response.custom_fee == '1') {
                         $('#feeField').show(); // Show the "Fee" input field

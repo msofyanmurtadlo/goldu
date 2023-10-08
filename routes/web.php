@@ -34,7 +34,7 @@ use App\Http\Controllers\TransferController;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 Route::get('/redirect', [RedirectController::class, 'index'])->name('redirect');
 Route::get('/postback', [PostbackController::class, 'index'])->name('postback');
 Auth::routes();
@@ -46,6 +46,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('/promotions', PromotionController::class)->except(['create', 'show']);
         Route::get('/transfers', [TransferController::class, 'index'])->name('transfers');
         Route::get('/transfers/{user}', [TransferController::class, 'now'])->name('transfers.now');
+        Route::get('/transfer/balance/{user}', [TransferController::class, 'getBalance'])->name('get.balance');
         Route::post('/transfers', [TransferController::class, 'transfer'])->name('transfers.post');
         Route::resource('/users', UserController::class)->except(['create', 'show']);
         Route::get('/settings', [SettingController::class, 'index'])->name('settings');

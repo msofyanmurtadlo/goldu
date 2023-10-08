@@ -52,6 +52,7 @@ class HomeController extends Controller
         $transactions = Transaction::where('user_id', Auth::id())->orderByDesc('created_at')
             ->with('user', 'network')
             ->paginate(10)->onEachSide(0);
+
         return view('home', compact(
             'transactions',
             'alltraffic',

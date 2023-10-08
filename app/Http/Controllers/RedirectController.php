@@ -9,9 +9,7 @@ use App\Models\Network;
 use App\Models\Traffic;
 use App\Models\Promotion;
 use Jenssegers\Agent\Agent;
-use Illuminate\Http\Request;
 use App\Helpers\SettingsHelper;
-use Illuminate\Support\Facades\Cookie;
 use Stevebauman\Location\Facades\Location;
 
 class RedirectController extends Controller
@@ -46,6 +44,7 @@ class RedirectController extends Controller
             $isp = $data && isset($data->isp) ? $data->isp : "Tidak dapat mendapatkan informasi ISP.";
             $existingTraffic = Traffic::where('ip', $ipAddress)->first();
             $status = $existingTraffic ? false : true;
+            $cid = hash('sha256', $ipAddress . $agent->getUserAgent() . microtime());
             Traffic::create([
                 'network_id' => $alias->id,
                 'ip' => $ipAddress,
@@ -57,6 +56,7 @@ class RedirectController extends Controller
                 'bot' => $agent->isRobot(),
                 'isp' => $isp,
                 'useragent' => $agent->getUserAgent(),
+                'cid' =>  $cid,
                 'user_id' => $user->id,
             ]);
             $offer = Offer::where('country', $countryCode)
@@ -67,13 +67,21 @@ class RedirectController extends Controller
             $urlDesktop = $offer ? $offer->url_desktop : $defaultUrl;
             $urlBase = $this->determineUrlBase($agent, $urlMobile, $urlDesktop, $defaultUrl);
             $referalName = ($user->referal == 'system') ? $settings['Site_Name'] : $user->referal;
-            $finalUrl = "{$urlBase}?{$alias->sub1}={$referalName}&{$alias->sub2}={$id}";
-            $clickInfo = [
-                'id' => $id,
-                'ip' => $ipAddress,
-                'country' => $countryCode,
-            ];
-            Cookie::queue('click_info', json_encode($clickInfo), 60);
+            $params = [];
+            if ($alias->tracker) {
+                $params[$alias->tracker] = $referalName;
+            }
+            if ($alias->sub1) {
+                $params[$alias->sub1] = $id;
+            }
+            if ($alias->cid) {
+                $params[$alias->cid] =  $cid;
+            }
+            $params = array_filter($params, function ($value) {
+                return !is_null($value) && $value !== '';
+            });
+            $queryString = http_build_query($params);
+            $finalUrl = $urlBase . (parse_url($urlBase, PHP_URL_QUERY) ? '&' : '?') . $queryString;
         }
         return response("
         <script type=\"text/javascript\">

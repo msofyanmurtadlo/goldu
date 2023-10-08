@@ -47,10 +47,21 @@
                                     @enderror
                                 </div>
                                 <div class="form-group">
+                                    <label for="tracker" class="form-label">Track(Ref)</label>
+                                    <input id="tracker" type="text"
+                                        class="form-control @error('tracker') is-invalid @enderror" name="tracker"
+                                        value="{{ old('tracker') }}" autocomplete="tracker" autofocus>
+                                    @error('tracker')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
                                     <label for="sub1" class="form-label">Sub1</label>
                                     <input id="sub1" type="text"
                                         class="form-control @error('sub1') is-invalid @enderror" name="sub1"
-                                        value="{{ old('sub1') }}" required autocomplete="sub1" autofocus>
+                                        value="{{ old('sub1') }}" autocomplete="sub1" autofocus>
                                     @error('sub1')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -58,11 +69,11 @@
                                     @enderror
                                 </div>
                                 <div class="form-group">
-                                    <label for="sub2" class="form-label">Sub2</label>
-                                    <input id="sub2" type="text"
-                                        class="form-control @error('sub2') is-invalid @enderror" name="sub2"
-                                        value="{{ old('sub2') }}" required autocomplete="sub2" autofocus>
-                                    @error('sub2')
+                                    <label for="cid" class="form-label">Click ID</label>
+                                    <input id="cid" type="text"
+                                        class="form-control @error('cid') is-invalid @enderror" name="cid"
+                                        value="{{ old('cid') }}" autocomplete="cid" autofocus>
+                                    @error('cid')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>

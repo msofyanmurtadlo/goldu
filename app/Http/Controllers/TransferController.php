@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Bonus;
 use App\Models\Network;
 use App\Models\Payment;
+use App\Models\Convertion;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use App\Models\NetworkBallance;
 use Illuminate\Support\Facades\Validator;
 
@@ -77,5 +80,30 @@ class TransferController extends Controller
 
         // Return a success response
         return redirect(route('transfers'))->with(['success' => 'Transfer successfully'], 201);
+    }
+    public function getBalance(Request $request, User $user)
+    {
+        try {
+            $startDate = Carbon::createFromFormat('d/m/Y', $request->startDate);
+            $endDate = Carbon::createFromFormat('d/m/Y', $request->endDate)->endOfDay(); // Menambahkan akhir hari agar mendapatkan data dari seluruh hari tersebut.
+            $networkId = $request->network_id;
+
+            $totalBonus = Bonus::where('user_id', $user->id)
+                ->where('network_id', $networkId)
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->sum('ballance');
+
+            $totalConvertion = Convertion::where('user_id', $user->id)
+                ->where('network_id', $networkId)
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->sum('ballance');
+
+            $totalBalance = $totalBonus + $totalConvertion;
+
+            return response()->json(['totalBalance' => $totalBalance]);
+        } catch (\Exception $e) {
+            // Jika ada kesalahan, kirim respons dengan pesan kesalahan.
+            return response()->json(['error' => 'Something went wrong. ' . $e->getMessage()], 500);
+        }
     }
 }

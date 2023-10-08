@@ -24,28 +24,23 @@ class PostbackController extends Controller
             $alias = Network::where('alias', $network)->first();
             if ($alias) {
                 $id = request('id');
-                $user = User::where('username', $id)->first();
-                if ($user) {
-                    $country = request('country');
-
-                    if (empty($country)) {
-                        $clickInfo = json_decode(request()->cookie('click_info'), true);
-
-                        if ($clickInfo && isset($clickInfo['id']) && isset($clickInfo['ip'])) {
-                            $traffic = Traffic::where('ip', $clickInfo['ip'])->get();
-
-                            if (isset($clickInfo['id']) && $clickInfo['id'] == $id && $traffic->isNotEmpty()) {
-                                $country = $clickInfo['country'];
-                            }
-                        }
+                if ($alias->cid) {
+                    $cid = Traffic::where('cid', $id)->first();
+                    if ($cid) {
+                        $userId = $cid->user_id;
+                        $user = User::find($userId);
+                        $country = $cid->country;
                     }
-
+                } else {
+                    $country = request('country');
+                    $user = User::where('username', $id)->first();
+                }
+                if ($user) {
                     if (strlen($country) != 2 || !ctype_upper($country)) {
                         $location = Location::get($country);
                         $getcountrycode = $location->countryCode;
                         $country = $getcountrycode;
                     }
-
                     $ballance = request('ballance');
                     if ($user->custom_fee) {
                         $defaultFee = $user->fee;

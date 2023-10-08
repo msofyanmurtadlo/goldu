@@ -40,7 +40,7 @@
                             <select class="form-select" id="network" name="network_id">
                                 <option selected="" disabled="">Select Network</option>
                                 @foreach ($user->networkBallances as $u)
-                                    <option value="{{ $u->network->id }}" data-balance="{{ $u->balance }}">
+                                    <option value="{{ $u->network->id }}">
                                         {{ $u->network->name }}</option>
                                 @endforeach
                             </select>
@@ -101,31 +101,21 @@
 @endsection
 @push('scripts')
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const accessKey = "{{ $settings['BCDN_Key'] }}";
-            const imgPath = "proof/"; // Path 'img'
-
+            const imgPath = "proof/";
             const fileInput = document.getElementById('image');
-
             fileInput.addEventListener('change', function() {
                 const file = fileInput.files[0];
-                if (!file) {
-                    return;
-                }
-
+                if (!file) return;
                 const originalFileName = file.name;
                 const fileExtension = originalFileName.split('.').pop().toLowerCase();
-                const fileName = generateHash() + '.' + fileExtension; // Menambahkan ekstensi asli
-                const imgUrl =
-                    `https://mylink12.b-cdn.net/${imgPath}${fileName}`; // Sertakan path 'img' dalam URL
-
+                const fileName = new Date().getTime() + '_' + Math.random().toString(36).substring(2, 15) +
+                    Math.random().toString(36).substring(2, 15) + '.' + fileExtension;
+                const imgUrl = `https://mylink12.b-cdn.net/${imgPath}${fileName}`;
                 document.getElementById('imgurl').value = imgUrl;
-
-                const url =
-                    `https://storage.bunnycdn.com/mylink12/${imgPath}${fileName}`; // Sertakan path 'img' dalam URL
-
+                const url = `https://storage.bunnycdn.com/mylink12/${imgPath}${fileName}`;
                 fetch(url, {
                     method: 'PUT',
                     headers: {
@@ -133,59 +123,57 @@
                         'AccessKey': accessKey
                     },
                     body: file
-                }).then(response => {
-                    if (response.ok) {
-                        console.log('File successfully uploaded.');
-                    } else {
-                        console.error('File upload failed.');
-                    }
-                }).catch(error => {
-                    console.error('An error occurred during the upload:', error);
                 });
             });
-
-            function generateHash() {
-                const timestamp = new Date().getTime();
-                const hash = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2,
-                    15);
-                return timestamp + '_' + hash;
-            }
         });
+
         $(document).ready(function() {
             $(".datepicker").datepicker({
-                dateFormat: "dd/mm/yy" // Format tanggal dd/mm/yyyy
+                dateFormat: "dd/mm/yy"
             });
+
+            function updateBalance() {
+                const startDate = $('#startDate').val();
+                const endDate = $('#endDate').val();
+                const networkId = $('#network').val();
+                if (startDate && endDate && networkId) {
+                    $.ajax({
+                        url: '{{ route('get.balance', $user->id) }}',
+                        method: 'GET',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: {
+                            startDate: startDate,
+                            endDate: endDate,
+                            network_id: networkId
+                        },
+                        success: function(data) {
+                            $('#ballance').val(data.totalBalance);
+                            calculateAndSetKonversi();
+                        }
+                    });
+                }
+            }
             $('#network').change(function() {
-                let selectedNetworkId = $(this).val();
-                let selectedBalance = $('option:selected', this).data('balance');
-                $('#ballance').val(selectedBalance);
-                calculateAndSetKonversi();
+                updateBalance();
             });
+            $('#startDate, #endDate, #network').change(updateBalance);
 
             function calculateAndSetKonversi() {
                 const ballance = parseFloat($('#ballance').val()) || 0;
                 const rate = parseFloat($('#rate').val()) || 0;
-                const konversiValue = (ballance * rate).toString().split('.')[0];
-                $('#konversi').val(konversiValue);
+                $('#konversi').val((ballance * rate).toString().split('.')[0]);
             }
             $('#ballance, #rate').on('input', calculateAndSetKonversi);
 
             function fetchRateAndFillForm() {
-                const url =
-                    "https://api.binance.com/api/v3/ticker/price?symbol=USDTBIDR"; // URL API untuk harga USDT ke BIDR di Binance
-
-                $.getJSON(url)
+                $.getJSON("https://api.binance.com/api/v3/ticker/price?symbol=USDTBIDR")
                     .done(function(data) {
-                        const rate_to_bidr = data.price.split('.')[0]; // Mengambil harga dari respons
-                        $('#rate').val(rate_to_bidr);
+                        $('#rate').val(data.price.split('.')[0]);
                         calculateAndSetKonversi();
-                    })
-                    .fail(function(jqxhr, textStatus, error) {
-                        const err = textStatus + ", " + error;
-                        console.log("Request Failed: " + err);
                     });
             }
-
             fetchRateAndFillForm();
         });
     </script>

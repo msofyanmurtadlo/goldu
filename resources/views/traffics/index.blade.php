@@ -43,7 +43,6 @@
                                     <th>OS</th>
                                     <th>Bot</th>
                                     <th>Isp</th>
-                                    <th>User Agent</th>
                                     @can('admin')
                                         <th>Pemilik</th>
                                     @endcan
@@ -69,7 +68,6 @@
                                                 class="badge bg-{{ $u->bot == 1 ? 'danger' : 'success' }}">{{ $u->bot == 1 ? 'Yes' : 'No' }}</span>
                                         </td>
                                         <td>{{ $u->isp }}</td>
-                                        <td>{{ $u->useragent }}</td>
                                         @can('admin')
                                             <td>
                                                 <span class="badge bg-warning">{{ '@' . $u->user->username }}</span>

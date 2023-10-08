@@ -44,6 +44,7 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'username' => ['required', 'string', 'max:255', 'unique:users', 'regex:/^\S*$/u'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'id_card' => ['nullable', 'string'],
             'referal' => ['nullable', 'string', 'exists:users,username'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'is_active' => ['required', 'boolean'], // Validation for is_active
@@ -59,6 +60,7 @@ class UserController extends Controller
             'name' => $request->input('name'),
             'username' => $request->input('username'),
             'email' => $request->input('email'),
+            'id_card' => $request->input('id_card'),
             'referal' => $request->input('referal') ?? 'system',
             'password' => Hash::make($request->input('password')),
             'is_active' => $request->input('is_active') ?? false,
@@ -104,8 +106,8 @@ class UserController extends Controller
         // Validasi input
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'id_card' => ['nullable', 'string'],
             'is_active' => 'required|boolean',
             'password' => 'nullable|string|min:8|confirmed',
             'custom_fee' => 'required|boolean',
@@ -119,8 +121,8 @@ class UserController extends Controller
         // Update data pengguna
         $user->update([
             'name' => $request->name,
-
             'email' => $request->email,
+            'id_card' => $request->id_card,
             'is_active' => $request->is_active,
             'password' => $request->password ? bcrypt($request->password) : $user->password,
             'custom_fee' => $request->custom_fee,

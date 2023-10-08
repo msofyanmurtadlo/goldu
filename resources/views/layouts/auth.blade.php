@@ -41,7 +41,8 @@
                         <div class="col-md-10">
                             <div class="card card-transparent shadow-none d-flex justify-content-center mb-0 auth-card">
                                 <div class="card-body">
-                                    <a href="" class="navbar-brand d-flex align-items-center mb-3">
+                                    <a href="{{ route('welcome') }}"
+                                        class="navbar-brand d-flex align-items-center mb-3">
                                         <!--Logo start-->
                                         <!--logo End-->
 

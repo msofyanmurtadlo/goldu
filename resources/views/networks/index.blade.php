@@ -49,8 +49,9 @@
                                         <th>Name</th>
                                         <th>Alias</th>
                                         <th>Smartlink</th>
+                                        <th>Track(Ref)</th>
                                         <th>Sub1</th>
-                                        <th>Sub2</th>
+                                        <th>Click ID</th>
                                         <th>Author</th>
                                         <th style="min-width: 100px">Action</th>
                                     </tr>
@@ -62,8 +63,9 @@
                                             <td>{{ $u->name }}</td>
                                             <td>{{ $u->alias }}</td>
                                             <td>{{ $u->smartlink }}</td>
+                                            <td>{{ $u->tracker }}</td>
                                             <td>{{ $u->sub1 }}</td>
-                                            <td>{{ $u->sub2 }}</td>
+                                            <td>{{ $u->cid }}</td>
                                             <td>
                                                 <span class="badge bg-primary">{{ $u->user->username }}</span>
                                             </td>
@@ -222,8 +224,9 @@
                     $('#formModal [name=name]').val(response.name);
                     $('#formModal [name=alias]').val(response.alias);
                     $('#formModal [name=smartlink]').val(response.smartlink);
+                    $('#formModal [name=tracker]').val(response.tracker);
                     $('#formModal [name=sub1]').val(response.sub1);
-                    $('#formModal [name=sub2]').val(response.sub2);
+                    $('#formModal [name=cid]').val(response.cid);
 
                     // Menampilkan modal
                     $('#formModal').modal('show');

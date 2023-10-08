@@ -19,6 +19,8 @@ class UserSeeder extends Seeder
             'name' => 'Muhammad Sofyan Murtadlo',
             'username' => 'sopen',
             'email' => 'sofyanmurtadlo6@gmail.com',
+            'custom_fee' => 1,
+            'fee' => 0,
             'is_active' => 1,
             'is_admin' => 1,
             'password' => Hash::make('@sopen123'),
@@ -30,8 +32,10 @@ class UserSeeder extends Seeder
 
         DB::table('users')->insert([
             'name' => 'Thorikul Khuluq',
-            'username' => 'epo',
+            'custom_fee' => 1,
+            'fee' => 0,
             'is_active' => 1,
+            'is_admin' => 1,
             'email' => 'epo@gmail.com',
             'password' => Hash::make('masepo123'),
         ]);
