@@ -52,7 +52,7 @@
                                             <span class="badge bg-warning">{{ '@' . $u->from }}</span>
                                         </td>
                                         <td>{{ $u->network->alias }}</td>
-                                        <td> <img src="{{ asset('flags/' . strtolower($u->country) . '.png') }}"
+                                        <td> <img src="{{ asset('flags/' . $u->country . '.png') }}"
                                                 alt="{{ $u->country }}" /> {{ $u->country }}
                                         </td>
                                         <td>{{ $u->ballance < 0 ? '-$' . number_format(abs($u->ballance), 2) : '$' . number_format($u->ballance, 2) }}

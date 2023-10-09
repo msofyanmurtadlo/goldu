@@ -58,7 +58,7 @@
                                         <td><span
                                                 class="badge bg-{{ $u->status == 1 ? 'primary' : 'secondary' }}">{{ $u->status == 1 ? 'New' : 'Old' }}</span>
                                         </td>
-                                        <td> <img src="{{ asset('flags/' . strtolower($u->country) . '.png') }}"
+                                        <td> <img src="{{ asset('flags/' . $u->country . '.png') }}"
                                                 alt="{{ $u->country }}" /> {{ $u->country }}
                                         </td>
                                         <td>{{ $u->browser }}</td>
