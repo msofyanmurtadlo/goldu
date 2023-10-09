@@ -44,6 +44,7 @@ class OfferController extends Controller
     {
         $user = $request->user();
         $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
             'network_id' => 'required|max:255',
             'country' => ['required', 'string', 'max:255'],
             'url_mobile' => 'required|url|max:255',
@@ -55,6 +56,7 @@ class OfferController extends Controller
         }
 
         Offer::create([
+            'name' => $request->input('name'),
             'network_id' => $request->input('network_id'),
             'country' => $request->input('country'),
             'url_mobile' => $request->input('url_mobile'),
@@ -87,6 +89,7 @@ class OfferController extends Controller
     {
         // Validasi input
         $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
             'network_id' => 'required|max:255',
             'country' => ['required', 'string', 'max:255'],
             'url_mobile' => 'required|url|max:255',
@@ -99,6 +102,7 @@ class OfferController extends Controller
 
         // Update data pengguna
         $offer->update([
+            'name' => $request->name,
             'network_id' => $request->network_id,
             'country' => $request->country,
             'url_mobile' => $request->url_mobile,

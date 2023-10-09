@@ -44,6 +44,7 @@
                             <thead>
                                 <tr class="ligth">
                                     <th>#</th>
+                                    <th>Name</th>
                                     <th>Network</th>
                                     <th>Country</th>
                                     <th>Url Mobile</th>
@@ -57,8 +58,9 @@
                                 @foreach ($offers as $u)
                                     <tr>
                                         <td>{{ $u->id }}</td>
+                                        <td>{{ $u->name }}</td>
                                         <td>{{ $u->network->name }}</td>
-                                        <td> <img src="{{ asset('flags/' . strtolower($u->country) . '.png') }}"
+                                        <td> <img src="{{ asset('flags/' . $u->country . '.png') }}"
                                                 alt="{{ $u->country }}" /> {{ $u->country }}
                                         </td>
                                         <td>{{ $u->url_mobile }}</td>
@@ -212,6 +214,7 @@
                 url: url,
                 success: function(response) {
                     // Mengatur data ke dalam elemen form pada modal
+                    $('#formModal [name=name]').val(response.name);
                     $('#formModal [name=network_id]').val(response.network_id);
                     $('#formModal [name=country]').val(response.country);
                     $('#formModal [name=url_mobile]').val(response.url_mobile);

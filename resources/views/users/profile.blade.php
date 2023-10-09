@@ -151,7 +151,7 @@
                                     <input type="hidden" name="id" value="{{ $bank->id }}">
                                     <div class="form-group row">
                                         <label class="control-label col-sm-3 align-self-center mb-0" for="bank_name">Bank
-                                            Bank (BCA)</label>
+                                            (BCA)</label>
                                         <div class="col-sm-9">
                                             <input value="{{ $bank->bank_name }}" type="text"
                                                 class="form-control @error('bank_name') is-invalid @enderror"

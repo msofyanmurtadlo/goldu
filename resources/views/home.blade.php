@@ -19,7 +19,22 @@
             <div class="row row-cols-1">
                 <div class="overflow-hidden d-slider1 ">
                     <ul class="p-0 m-0 mb-2 swiper-wrapper list-inline">
-                        <li class="swiper-slide card card-slide" data-aos="fade-up" data-aos-delay="700">
+                        @foreach ($revenue as $r)
+                            @foreach ($r->networkBallances as $n)
+                                <li class="swiper-slide card card-slide" data-aos="fade-up" data-aos-delay="700">
+                                    <div class="card-body">
+                                        <div class="progress-widget">
+
+                                            <div class="progress-detail">
+                                                <p class="mb-2">Network {{ $n->network->alias }}</p>
+                                                <h4 class="counter"> {{ '$' . $n->balance }}</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            @endforeach
+                        @endforeach
+                        <li class="swiper-slide card card-slide" data-aos="fade-up" data-aos-delay="800">
                             <div class="card-body">
                                 <div class="progress-widget">
                                     <div id="circle-progress-01"
@@ -37,29 +52,7 @@
                                 </div>
                             </div>
                         </li>
-                        @foreach ($revenue as $r)
-                            @foreach ($r->networkBallances as $n)
-                                <li class="swiper-slide card card-slide" data-aos="fade-up" data-aos-delay="1000">
-                                    <div class="card-body">
-                                        <div class="progress-widget">
-                                            <div id="circle-progress-04"
-                                                class="text-center circle-progress-01 circle-progress circle-progress-info"
-                                                data-min-value="0" data-max-value="{{ $r->ballance }}"
-                                                data-value="{{ $n->balance }}" data-type="percent">
-                                                <i class="card-slie-arrow icon-24" width="24" viewBox="0 0 24 24">
-                                                    <i class="fa-solid fa-diagram-project"></i>
-                                                </i>
-                                            </div>
-                                            <div class="progress-detail">
-                                                <p class="mb-2">Network {{ $n->network->alias }}</p>
-                                                <h4 class="counter"> {{ '$' . $n->balance }}</h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                            @endforeach
-                        @endforeach
-                        <li class="swiper-slide card card-slide" data-aos="fade-up" data-aos-delay="1200">
+                        <li class="swiper-slide card card-slide" data-aos="fade-up" data-aos-delay="900">
                             <div class="card-body">
                                 <div class="progress-widget">
                                     <div id="circle-progress-06"
@@ -77,7 +70,7 @@
                                 </div>
                             </div>
                         </li>
-                        <li class="swiper-slide card card-slide" data-aos="fade-up" data-aos-delay="1300">
+                        <li class="swiper-slide card card-slide" data-aos="fade-up" data-aos-delay="1000">
                             <div class="card-body">
                                 <div class="progress-widget">
                                     <div id="circle-progress-07"
@@ -95,7 +88,7 @@
                                 </div>
                             </div>
                         </li>
-                        <li class="swiper-slide card card-slide" data-aos="fade-up" data-aos-delay="1300">
+                        <li class="swiper-slide card card-slide" data-aos="fade-up" data-aos-delay="1100">
                             <div class="card-body">
                                 <div class="progress-widget">
                                     <div id="circle-progress-01"
@@ -136,12 +129,28 @@
                     <div class="card" data-aos="fade-up" data-aos-delay="500">
                         <div class="text-center card-body d-flex justify-content-around">
                             <div>
-                                <h2 class="mb-2">{{ $alltraffic }}</h2>
+                                <h2 class="mb-2">
+                                    @if ($alltraffic >= 1000000)
+                                        {{ $alltraffic / 1000000 }}M
+                                    @elseif($alltraffic >= 1000)
+                                        {{ $alltraffic / 1000 }}k
+                                    @else
+                                        {{ $alltraffic }}
+                                    @endif
+                                </h2>
                                 <p class="mb-0 text-gray">All Traffic</p>
                             </div>
                             <hr class="hr-vertial">
                             <div>
-                                <h2 class="mb-2">{{ $allconvertion }}</h2>
+                                <h2 class="mb-2">
+                                    @if ($allconvertion >= 1000000)
+                                        {{ $allconvertion / 1000000 }}M
+                                    @elseif($allconvertion >= 1000)
+                                        {{ $allconvertion / 1000 }}k
+                                    @else
+                                        {{ $allconvertion }}
+                                    @endif
+                                </h2>
                                 <p class="mb-0 text-gray">All Convertion</p>
                             </div>
                         </div>
