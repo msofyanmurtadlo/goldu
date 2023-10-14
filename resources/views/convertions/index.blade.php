@@ -81,8 +81,15 @@
         $(document).on('click', '.pagination a', function(e) {
             e.preventDefault();
             var url = $(this).attr('href');
+            var picker = $('#dateRangePicker').data('daterangepicker');
+            if (picker.startDate && picker.endDate) {
+                url += (url.indexOf('?') !== -1 ? '&' : '?') + 'startDate=' + picker.startDate.format(
+                    'YYYY-MM-DD') + '&endDate=' + picker.endDate.format('YYYY-MM-DD');
+            }
+
             refreshTableContent(url);
         });
+
 
         function refreshTableContent(url = location.href) {
             $.ajax({

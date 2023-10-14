@@ -18,10 +18,13 @@ class OfferController extends Controller
     {
 
         $search = request('search');
-        $offers = Offer::with('user', 'network')
-            ->whereHas('network', function ($query) use ($search) {
-                $query->where('name', 'like', "%{$search}%");
-            })
+        $offers = Offer::when(
+            $search,
+            function ($query, $search) {
+                return $query->where('name', 'like', "%{$search}%");
+            }
+        )
+            ->with('user', 'network')
             ->orderBy('created_at', 'desc')
             ->paginate(10)->onEachSide(0);
         $network = Network::get();

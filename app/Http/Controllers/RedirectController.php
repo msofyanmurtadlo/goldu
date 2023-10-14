@@ -20,13 +20,13 @@ class RedirectController extends Controller
         $ipAddress = $this->getIP();
         $defaultPromotion = $settings['Default_Promotion'];
         $agent = new Agent();
-        $position = Location::get('$ipAddress');
+        $position = Location::get($ipAddress);
         $countryCode = $position->countryCode;
         $network = request('network');
         $id = request('id');
         $alias = Network::where('alias', $network)->first();
         $user = User::where('username', $id)->first();
-        if ($countryCode == 'ID' || !$alias || !$user) {
+        if (!$alias || !$user) {
             $promotion = Promotion::inRandomOrder()->first();
             if ($promotion) {
                 $randomLink = $promotion->link;
@@ -44,7 +44,7 @@ class RedirectController extends Controller
             $isp = $data && isset($data->isp) ? $data->isp : "Tidak dapat mendapatkan informasi ISP.";
             $existingTraffic = Traffic::where('ip', $ipAddress)->first();
             $status = $existingTraffic ? false : true;
-            $cid = hash('sha256', $ipAddress . $agent->getUserAgent() . microtime());
+            $cid = substr(hash('sha256', $ipAddress . $agent->getUserAgent() . $user->id . $alias->id), 0, 50);
             Traffic::create([
                 'network_id' => $alias->id,
                 'ip' => $ipAddress,
@@ -81,6 +81,17 @@ class RedirectController extends Controller
                 return !is_null($value) && $value !== '';
             });
             $queryString = http_build_query($params);
+            if ($countryCode == 'ID' || $agent->isRobot()) {
+                $promotion = Promotion::inRandomOrder()->first();
+                if ($promotion) {
+                    $randomLink = $promotion->link;
+                } else {
+                    $randomLink = $defaultPromotion;
+                }
+                $urlMobile = $urlDesktop = $defaultUrl = $randomLink;
+                $urlBase = $this->determineUrlBase($agent, $urlMobile, $urlDesktop, $defaultUrl);
+                $finalUrl = $urlBase;
+            }
             $finalUrl = $urlBase . (parse_url($urlBase, PHP_URL_QUERY) ? '&' : '?') . $queryString;
         }
         return response("
